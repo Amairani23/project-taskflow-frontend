@@ -1,0 +1,70 @@
+import { useNavigate } from "react-router"
+import { tasks } from "../../../../data/tasks"
+
+import borrar from "../../../../images/borrar.png"
+import abrir from "../../../../images/abrir-doc.png"
+
+export default function Card({ card }) {
+  const navigate = useNavigate()
+
+  const handleClick = () => {
+    navigate(`/project/${card._id}`)
+  }
+
+  //reduce() sirve para recorrer un array y construir un único resultado.
+  const tasksByProject = tasks.reduce((acc, task) => {
+    acc[task.idProject] = (acc[task.idProject] || 0) + 1
+    return acc //acumulador
+  }, {}) //empieza con un objeto vacio
+
+  const tasksByProjectPending = tasks.filter((task) => {
+    return (
+      (task.status === "pending" || task.status === "progress") &&
+      task.idProject === card._id
+    )
+  })
+
+  return (
+    <div className=" rounded-lg shadow-md p-8 bg-[#70CEBB]/48 text-white">
+      <div className="grid grid-cols-4 gap-4 items-center mt-3">
+        <div className="col-span-3">
+          <h2 className="text-3xl font-semibold">{card.titleProject}</h2>
+          <div className="grid grid-cols-5 gap-4 items-center mt-3 ">
+            {/* tareas */}
+            <div className="rounded-lg text-right">
+              <p className="text-3xl">{tasksByProject[card._id] || 0}</p>
+            </div>
+            <div className="col-span-4 rounded-lg">
+              <p>Tareas</p>
+            </div>
+          </div>
+          {/* pendientes */}
+          <div className="grid grid-cols-5 gap-4 items-center">
+            <div className="rounded-lg text-right">
+              <p className="text-3xl">{tasksByProjectPending.length}</p>
+            </div>
+            <div className="col-span-4  rounded-lg">
+              <p>Pendientes</p>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div className="flex flex-col items-end gap-15">
+            <img
+              src={borrar}
+              alt="Imagen superior"
+              className="w-8 h-8 object-cover rounded-lg"
+            />
+
+            <img
+              src={abrir}
+              alt="Imagen inferior"
+              className="w-8 h-8 object-cover rounded-lg  cursor-pointer"
+              onClick={handleClick}
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
