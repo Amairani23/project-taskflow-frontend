@@ -3,12 +3,21 @@ import { tasks } from "../../../../data/tasks"
 
 import borrar from "../../../../images/borrar.png"
 import abrir from "../../../../images/abrir-doc.png"
+import RemoveCard from "../../../Popup/RemoveCard/RemoveCard"
 
-export default function Card({ card }) {
+export default function Card({ card, onOpenPopup, onCardDelete }) {
   const navigate = useNavigate()
 
   const handleClick = () => {
     navigate(`/project/${card._id}`)
+  }
+
+  const removePopup = {
+    title: "",
+    children: <RemoveCard onDelete={handleDeleteClick} />,
+  }
+  function handleDeleteClick() {
+    onCardDelete(card)
   }
 
   //reduce() sirve para recorrer un array y construir un único resultado.
@@ -54,6 +63,7 @@ export default function Card({ card }) {
               src={borrar}
               alt="Imagen superior"
               className="w-8 h-8 object-cover rounded-lg"
+              onClick={() => onOpenPopup(removePopup)}
             />
 
             <img

@@ -8,14 +8,14 @@ export const projects = [
   {
     _id: "2",
     titleProject: "App móvil",
-    descriptionProject: "página para cliente",
+    descriptionProject: "aplicación para cliente",
     ownerId: "1223",
   },
   {
     _id: "3",
     titleProject: "Tienda online",
     descriptionProject: "página para cliente",
-    ownerId: "1223",
+    ownerId: "1225",
   },
   {
     _id: "4",

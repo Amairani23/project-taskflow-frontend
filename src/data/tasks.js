@@ -1,6 +1,6 @@
 export const tasks = [
   {
-    _id: "122323",
+    _id: "1",
     idProject: "1",
     title: "Login",
     assignade: "1224",
@@ -8,15 +8,15 @@ export const tasks = [
     prioridad: "baja",
   },
   {
-    _id: "122323",
+    _id: "2",
     idProject: "1",
     title: "Login 2",
-    assignade: "1223",
-    status: "pending",
+    assignade: "1225",
+    status: "progress",
     prioridad: "media",
   },
   {
-    _id: "122323",
+    _id: "3",
     idProject: "1",
     title: "Login 3",
     assignade: "1224",
@@ -24,7 +24,7 @@ export const tasks = [
     prioridad: "alta",
   },
   {
-    _id: "122323",
+    _id: "6",
     idProject: "1",
     title: "Login 4",
     assignade: "1223",
@@ -32,19 +32,27 @@ export const tasks = [
     prioridad: "baja",
   },
   {
-    _id: "122424",
+    _id: "4",
     idProject: "2",
     title: "API usuarios",
-    assignade: "1223",
+    assignade: "1225",
     status: "progress",
     prioridad: "alta",
   },
   {
-    _id: "122525",
+    _id: "5",
     idProject: "3",
     title: "API usuarios",
     assignade: "1223",
     status: "completed",
+    prioridad: "baja",
+  },
+  {
+    _id: "7",
+    idProject: "6",
+    title: "API usuarios",
+    assignade: "1224",
+    status: "progress",
     prioridad: "baja",
   },
 ]

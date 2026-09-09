@@ -11,18 +11,10 @@ import UsersRoute from "../ProtectedRoute/UsersRoute/UsersRoute"
 import { useLogin } from "../../hooks/useLogin"
 import { useRegister } from "../../hooks/useRegister"
 import Project from "../Main/Users/Project/Project"
+import { usePopup } from "../../hooks/usePopup"
 
 function App() {
-  const [popup, setPopup] = useState(null)
-
-  function handleOpenPopup(popup) {
-    setPopup(popup)
-    setIsLoading(false)
-  }
-
-  function handleClosePopup() {
-    setPopup(null)
-  }
+  const { handleOpenPopup, handleClosePopup } = usePopup()
 
   //login
   const { userEmail, isLoggedIn, handleLogin, handleLogout } = useLogin(
@@ -50,14 +42,7 @@ function App() {
 
         <Route
           path="/signup"
-          element={
-            <Register
-              handleRegistration={handleRegistration}
-              onOpenPopup={handleOpenPopup}
-              onClosePopup={handleClosePopup}
-              popup={popup}
-            />
-          }
+          element={<Register handleRegistration={handleRegistration} />}
         />
 
         <Route
