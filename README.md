@@ -13,13 +13,13 @@ El administrador cuenta con acceso a un panel general desde donde puede visualiz
 Entre sus principales funcionalidades se encuentran:
 
 - Visualización de un dashboard administrativo.
--     Visualización de los proyectos registrados.
--     Visualización de las tareas existentes.
--     Visualización de los usuarios registrados.
--     Consulta de información de los proyectos.
--     Consulta de las tareas asociadas a los proyectos.
--     Visualización de los usuarios responsables o asignados a los proyectos.
--     Gestión de la información dependiendo de los permisos establecidos por el backend.
+- Visualización de los proyectos registrados.
+- Visualización de las tareas existentes.
+- Visualización de los usuarios registrados.
+- Consulta de información de los proyectos.
+- Consulta de las tareas asociadas a los proyectos.
+- Visualización de los usuarios responsables o asignados a los proyectos.
+- Gestión de la información dependiendo de los permisos establecidos por el backend.
 
 ### Usuario
 
@@ -27,11 +27,11 @@ Los usuarios tienen acceso a la información relacionada con los proyectos en lo
 
 Sus principales funcionalidades son:
 
--     Visualizar los proyectos que tienen asignados.
--     Consultar la información de cada proyecto.
--     Visualizar las tareas correspondientes a cada proyecto.
--     Consultar las tareas que tienen pendientes.
--     Dar seguimiento a las actividades asignadas.
+- Visualizar los proyectos que tienen asignados.
+- Consultar la información de cada proyecto.
+- Visualizar las tareas correspondientes a cada proyecto.
+- Consultar las tareas que tienen pendientes.
+- Dar seguimiento a las actividades asignadas.
 
 ## Tecnologías utilizadas
 
