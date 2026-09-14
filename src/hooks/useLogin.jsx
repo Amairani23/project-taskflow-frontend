@@ -23,7 +23,11 @@ export const useLogin = (handleOpenPopup, handleClosePopup) => {
           setToken(data.token)
           setUserEmail(email)
           setIsLoggedIn(true)
-          navigate("/")
+          if (data.user.systemRol === "admin") {
+            navigate("/admin")
+          } else {
+            navigate("/dashboard")
+          }
         }
       })
       .catch((err) => {

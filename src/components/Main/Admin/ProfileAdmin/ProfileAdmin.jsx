@@ -13,7 +13,8 @@ export default function ProfileAdmin({ handleOpenPopup }) {
   }
 
   function handleDeleteClick() {
-    onCardDelete()
+    console.log("Eliminando:", users._id)
+    onCardDelete(users._id)
   }
 
   const removePopup = {

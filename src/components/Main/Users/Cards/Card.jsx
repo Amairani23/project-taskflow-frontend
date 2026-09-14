@@ -16,8 +16,10 @@ export default function Card({ card, onOpenPopup, onCardDelete }) {
     title: "",
     children: <RemoveCard onDelete={handleDeleteClick} />,
   }
+
   function handleDeleteClick() {
-    onCardDelete(card)
+    console.log("Eliminando:", card._id)
+    onCardDelete(card._id)
   }
 
   //reduce() sirve para recorrer un array y construir un único resultado.

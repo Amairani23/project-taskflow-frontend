@@ -1,6 +1,4 @@
-
-export const BASE_URL = "https://api.inariama.mooo.com";
-
+export const BASE_URL = "xxx"
 
 export const register = (data) => {
   return fetch(`${BASE_URL}/signup`, {
@@ -12,19 +10,17 @@ export const register = (data) => {
       email: data.email,
       password: data.password,
     }),
-    
-  })
-    .then((res) => {
-      if (res.ok) {
-        return res.json();
-      }
+  }).then((res) => {
+    if (res.ok) {
+      return res.json()
+    }
 
-      return res.json().then((error) => {
-        console.log("Error del servidor:", error);
-        return Promise.reject(error);
-      });
-    });
-};
+    return res.json().then((error) => {
+      console.log("Error del servidor:", error)
+      return Promise.reject(error)
+    })
+  })
+}
 
 export const authorize = (email, password) => {
   return fetch(`${BASE_URL}/signin`, {
@@ -32,25 +28,24 @@ export const authorize = (email, password) => {
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ 
-        email,
-        password,
+    body: JSON.stringify({
+      email,
+      password,
     }),
-  })
-   .then((res) => {
+  }).then((res) => {
     if (res.ok) {
-      return res.json();
+      return res.json()
     }
 
     return Promise.reject(
       res.status === 400
         ? "No se ha proporcionado uno o más campos."
         : res.status === 401
-        ? "No se ha encontrado al usuario con el correo electrónico especificado."
-        : "Error en la solicitud."
-    );
-  });
-};
+          ? "No se ha encontrado al usuario con el correo electrónico especificado."
+          : "Error en la solicitud.",
+    )
+  })
+}
 
 export const checkToken = (token) => {
   return fetch(`${BASE_URL}/users/me`, {
@@ -61,19 +56,19 @@ export const checkToken = (token) => {
     },
   }).then((res) => {
     if (res.ok) {
-      return res.json();
+      return res.json()
     }
 
     if (res.status === 400) {
       return Promise.reject(
-        "400 - Token no proporcionado o proporcionado en el formato incorrecto."
-      );
+        "400 - Token no proporcionado o proporcionado en el formato incorrecto.",
+      )
     }
 
     if (res.status === 401) {
-      return Promise.reject("401 - El token proporcionado es inválido.");
+      return Promise.reject("401 - El token proporcionado es inválido.")
     }
 
-    return Promise.reject(`Error: ${res.status}`);
-  });
-};
+    return Promise.reject(`Error: ${res.status}`)
+  })
+}
