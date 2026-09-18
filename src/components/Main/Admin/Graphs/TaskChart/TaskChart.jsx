@@ -9,9 +9,9 @@ import {
 } from "recharts"
 
 export default function TaskChart({ tasks }) {
-  const pending = tasks.filter((task) => task.prioridad === "media").length
+  const pending = tasks.filter((task) => task.prioridad === "alta").length
 
-  const progress = tasks.filter((task) => task.prioridad === "alta").length
+  const progress = tasks.filter((task) => task.prioridad === "media").length
 
   const completed = tasks.filter((task) => task.prioridad === "baja").length
 

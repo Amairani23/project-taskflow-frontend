@@ -1,23 +1,11 @@
-import { projects } from "../../../../data/projects"
-import { tasks } from "../../../../data/tasks"
-import { users } from "../../../../data/users"
-import { useState } from "react"
-import agregar from "../../../../images/btn-add-project.png"
+import { useContext } from "react"
+import CurrentUserContext from "../../../../contexts/CurrentUserContext"
 import NewProject from "../../../Popup/form/NewProject/NewProject"
-import Popup from "../../../Popup/Popup"
 import TaskChart from "../Graphs/TaskChart/TaskChart"
 import TaskCircule from "../Graphs/TaskChart/TaskCircule"
 
 export default function Dashboard() {
-  const [popup, setPopup] = useState(null)
-
-  function handleOpenPopup(popup) {
-    setPopup(popup)
-  }
-
-  function handleClosePopup() {
-    setPopup(null)
-  }
+  const { usuarios, projects, tasks } = useContext(CurrentUserContext)
 
   const addProjectPopup = {
     title: "Nuevo proyecto",
@@ -44,7 +32,7 @@ export default function Dashboard() {
                 <div className="grid grid-cols-5 gap-4 items-center mt-3 ">
                   {/* tareas */}
                   <div className="rounded-lg text-right">
-                    <p className="text-3xl">{users.length}</p>
+                    <p className="text-3xl">{usuarios.length}</p>
                   </div>
                   <div className="col-span-4 rounded-lg">
                     <p>Usuarios totales</p>
@@ -100,11 +88,6 @@ export default function Dashboard() {
           <TaskCircule tasks={tasks} />
         </section>
       </main>
-      {popup && (
-        <Popup onClose={handleClosePopup} title={popup.title}>
-          {popup.children}
-        </Popup>
-      )}
     </>
   )
 }

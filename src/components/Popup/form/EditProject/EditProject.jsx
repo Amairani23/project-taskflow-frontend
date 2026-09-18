@@ -1,86 +1,96 @@
 import { useContext, useState } from "react"
-import guardar from "../../../../images/guardar-el-archivo.png"
 import CurrentUserContext from "../../../../contexts/CurrentUserContext"
 
+import guardar from "../../../../images/guardar-el-archivo.png"
 import cerrar from "../../../../images/cerrar-simbolo-de-boton-circular-blanco.png"
 
-export default function NewProject({ handleClosePopup }) {
-  const { usuarios, handleAddProjectsSubmit } = useContext(CurrentUserContext)
+export default function EditProjects({ project, handleClosePopup }) {
+  const { usuarios, handleUpdateProject } = useContext(CurrentUserContext)
 
-  const [title, setTitle] = useState("")
-  const [description, setDescription] = useState("")
-  const [assignedTo, setAssignedTo] = useState([])
+  const [title, setTitle] = useState(project.titleProject)
+  const [description, setDescription] = useState(project.descriptionProject)
+  const [assignedTo, setAssignedTo] = useState(project.assignedTo || [])
 
-  const [titleError, setTitleRefError] = useState("")
-  const [descriptionRefError, setDescriptionRefError] = useState("")
+  const [titleError, setTitleError] = useState("")
+  const [descriptionError, setDescriptionError] = useState("")
 
   const handleTitleChange = (event) => {
     if (event.target.value.length < 3) {
-      setTitleRefError("Error: debe tener más de 2 caracteres y menos de 40")
+      setTitleError("Error: debe tener más de 2 caracteres y menos de 40")
     } else {
-      setTitleRefError("")
+      setTitleError("")
     }
 
-    setTitle(event.target.value) // Actualiza name cuando cambie la entrada
+    setTitle(event.target.value)
   }
 
   const handleDescriptionChange = (event) => {
     if (event.target.value.length < 3) {
-      setDescriptionRefError(
-        "Error: debe tener más de 2 caracteres y menos de 40",
-      )
+      setDescriptionError("Error: debe tener más de 2 caracteres y menos de 40")
     } else {
-      setDescriptionRefError("")
+      setDescriptionError("")
     }
 
-    setDescription(event.target.value) // Actualiza description cuando cambie la entrada
+    setDescription(event.target.value)
   }
 
   const handleSubmit = (event) => {
     event.preventDefault()
 
     const data = {
+      id: project._id,
       titleProject: title,
       descriptionProject: description,
       assignedTo: assignedTo.map((user) => user._id),
     }
 
-    handleAddProjectsSubmit(data)
+    handleUpdateProject(data)
     handleClosePopup()
   }
 
   return (
     <form
       className="flex w-full flex-col gap-5 p-5"
-      id="new-card-form"
+      name="profile-form"
+      id="edit-profile-form"
+      noValidate
       onSubmit={handleSubmit}
     >
       <label className="popup__label">
         <input
-          id="title"
           className="w-full border-b border-gray-300 bg-transparent px-1 py-3 text-lg text-white outline-none transition placeholder:text-gray-400 focus:border-green-600"
-          name="titleProject"
-          placeholder="Nombre del proyecto"
-          type="text"
+          id="owner-title"
+          maxLength="40"
+          minLength="2"
+          name="projectTitle"
+          placeholder="Title"
           required
+          type="text"
           value={title}
           onChange={handleTitleChange}
         />
-        <span className="min-h-5 text-sm text-red-500">{titleError}</span>
+        <span className="min-h-5 text-sm text-red-500" id="owner-title-error">
+          {titleError}
+        </span>
       </label>
       <label className="popup__label">
         <input
-          id="description"
           className="w-full border-b border-gray-300 bg-transparent px-1 py-3 text-lg text-white outline-none transition placeholder:text-gray-400 focus:border-green-600"
-          name="descriptionProject"
-          placeholder="Descripción del proyecto"
-          type="text"
+          id="owner-description"
+          maxLength="200"
+          minLength="2"
+          name="userDescription"
+          placeholder="Description"
           required
+          type="text"
           value={description}
           onChange={handleDescriptionChange}
         />
-        <span className="min-h-5 text-sm text-red-500">
-          {descriptionRefError}
+        <span
+          className="min-h-5 text-sm text-red-500"
+          id="owner-description-error"
+        >
+          {descriptionError}
         </span>
       </label>
 
@@ -95,7 +105,7 @@ export default function NewProject({ handleClosePopup }) {
               key={user._id}
               className="flex w-full items-center justify-between rounded-lg border border-gray-700 bg-gray-800 px-4 py-3"
             >
-              <span className="text-sm text-white">{user.name}</span>
+              <span className="text-lsm text-white">{user.name}</span>
 
               <button
                 className="flex h-8 w-8 items-center justify-center rounded-full  transition hover:bg-red-600"

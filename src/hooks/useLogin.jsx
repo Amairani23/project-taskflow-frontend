@@ -6,7 +6,8 @@ import InfoTooltip from "../components/Popup/InfoTooltip/InfoTooltip"
 
 export const useLogin = (handleOpenPopup, handleClosePopup) => {
   const [userEmail, setUserEmail] = useState("")
-  const [isLoggedIn, setIsLoggedIn] = useState(true)
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [user, setUser] = useState("")
 
   const navigate = useNavigate()
 
@@ -22,6 +23,7 @@ export const useLogin = (handleOpenPopup, handleClosePopup) => {
         if (data.token) {
           setToken(data.token)
           setUserEmail(email)
+          setUser(data.user.systemRol)
           setIsLoggedIn(true)
           if (data.user.systemRol === "admin") {
             navigate("/admin")
@@ -68,6 +70,7 @@ export const useLogin = (handleOpenPopup, handleClosePopup) => {
   }, [])
 
   return {
+    user,
     userEmail,
     isLoggedIn,
     handleLogin,

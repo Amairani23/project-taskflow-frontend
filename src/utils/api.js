@@ -14,8 +14,8 @@ class Api {
   }
 
   //Muestra información del usuario
-  getUserInfo() {
-    return fetch(`${this.baseUrl}/users/me`, {
+  getUsers() {
+    return fetch(`${this.baseUrl}/users`, {
       headers: this._getHeaders(),
     }).then((res) => {
       if (res.ok) {
@@ -31,8 +31,9 @@ class Api {
       method: "PATCH",
       headers: this._getHeaders(),
       body: JSON.stringify({
+        avatar: userData.avatar,
         name: userData.name,
-        about: userData.about,
+        email: userData.email,
       }),
     }).then((res) => {
       if (res.ok) {
@@ -111,8 +112,43 @@ class Api {
     return fetch(`${this.baseUrl}/projects/${projectId}`, {
       method: "DELETE",
       headers: this._getHeaders(),
+    }).then(async (res) => {
+      if (!res.ok) {
+        throw new Error(`Error: ${res.status}`)
+      }
+      const text = await res.text()
+
+      return true
+    })
+  }
+
+  // Muestra las tareas para admin
+  getInitialTaskAdmin() {
+    return fetch(`${this.baseUrl}/tasks`, {
+      headers: this._getHeaders(),
     }).then((res) => {
-      if (res.ok) return res.json()
+      if (res.ok) {
+        return res.json()
+      }
+      return Promise.reject(`Error: ${res.status}`)
+    })
+  }
+
+  // Editar las tareas para admin
+  updateTaskAdmin(taskData, projectId, taskId) {
+    return fetch(`${this.baseUrl}/projects/${projectId}/tasks/${taskId}`, {
+      method: "PATCH",
+      headers: this._getHeaders(),
+      body: JSON.stringify({
+        title: taskData.title,
+        status: taskData.status,
+        prioridad: taskData.prioridad,
+        assignedTo: taskData.assignedTo,
+      }),
+    }).then((res) => {
+      if (res.ok) {
+        return res.json()
+      }
       return Promise.reject(`Error: ${res.status}`)
     })
   }
@@ -149,7 +185,7 @@ class Api {
   }
 
   //Agrega tareas
-  addTask(taskData, projectId) {
+  createTask(taskData, projectId) {
     return fetch(`${this.baseUrl}/projects/${projectId}/tasks`, {
       method: "POST",
       headers: this._getHeaders(),
@@ -160,6 +196,7 @@ class Api {
         assignedTo: taskData.assignedTo,
       }),
     }).then((res) => {
+      console.log("DELETE status:", res.status)
       if (res.ok) {
         return res.json()
       }

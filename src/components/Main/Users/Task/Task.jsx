@@ -2,7 +2,7 @@ import { users } from "../../../../data/users"
 
 import editar from "../../../../images/editar.png"
 
-import EditTaks from "../../../Popup/form/EditTaks/EditTaks"
+import EditTaks from "../../../Popup/form/EditTak/EditTak"
 
 export default function Task({ task, onOpenPopup }) {
   const userAssigned = users.find((user) => user._id === task.assignade)

@@ -1,20 +1,22 @@
-import { users } from "../../../../data/users"
-
 import editar from "../../../../images/editar.png"
 import borrar from "../../../../images/borrar.png"
 
 import RemoveCard from "../../../Popup/RemoveCard/RemoveCard"
 import EditUsers from "../../../Popup/form/EditUsers/EditUsers"
+import CurrentUserContext from "../../../../contexts/CurrentUserContext"
+import { useContext } from "react"
 
 export default function ProfileAdmin({ handleOpenPopup }) {
+  const { usuarios } = useContext(CurrentUserContext)
+
   const userEditPopup = {
     title: "Editar usuario",
     children: <EditUsers />,
   }
 
   function handleDeleteClick() {
-    console.log("Eliminando:", users._id)
-    onCardDelete(users._id)
+    console.log("Eliminando usuario")
+    // Aquí después puedes recibir el id del usuario
   }
 
   const removePopup = {
@@ -24,60 +26,80 @@ export default function ProfileAdmin({ handleOpenPopup }) {
 
   return (
     <div>
-      <main className="container mx-auto px-4 py-8">
-        <div className="flex justify-between mb-6">
-          <h1 className="text-white text-4xl mb-10">Usuarios</h1>
+      <main className="w-full px-2 py-6 sm:px-4 sm:py-8">
+        {/* Encabezado */}
+        <div className="mb-6">
+          <h1 className="text-3xl text-white sm:text-4xl">Usuarios</h1>
         </div>
-        <div className="w-full overflow-hidden rounded-xl bg-white shadow-lg">
-          <table className="w-full text-left">
+
+        {/* Tabla */}
+        <div className="max-w-full overflow-x-auto rounded-xl bg-white shadow-lg">
+          <table className="w-full min-w-[600px] text-left">
             <thead className="bg-[#02216B] text-white">
               <tr>
-                <th className="px-6 py-4 text-sm font-semibold">Id</th>
+                <th className="px-3 py-3 text-xs font-semibold sm:px-6 sm:py-4 sm:text-sm">
+                  Id
+                </th>
 
-                <th className="px-6 py-4 text-sm font-semibold">Nombre</th>
+                <th className="px-3 py-3 text-xs font-semibold sm:px-6 sm:py-4 sm:text-sm">
+                  Nombre
+                </th>
 
-                <th className="px-6 py-4 text-sm font-semibold">Correo</th>
-                <th className="px-6 py-4 text-sm font-semibold">Rol</th>
+                <th className="px-3 py-3 text-xs font-semibold sm:px-6 sm:py-4 sm:text-sm">
+                  Correo
+                </th>
 
-                <th className="px-6 py-4 text-right text-sm font-semibold">
+                <th className="px-3 py-3 text-xs font-semibold sm:px-6 sm:py-4 sm:text-sm">
+                  Rol
+                </th>
+
+                <th className="px-3 py-3 text-right text-xs font-semibold sm:px-6 sm:py-4 sm:text-sm">
                   Acciones
                 </th>
               </tr>
             </thead>
 
             <tbody className="divide-y divide-gray-200">
-              {users.map((users) => {
+              {usuarios.map((user, index) => {
                 return (
-                  <tr key={users._id} className="transition hover:bg-gray-50">
-                    <td className="px-6 py-4 font-medium text-gray-800">
-                      {users._id}
-                    </td>
-                    <td className="px-6 py-4 font-medium text-gray-800">
-                      {users.name}
+                  <tr key={user._id} className="transition hover:bg-gray-50">
+                    <td className="px-3 py-3 text-sm font-medium text-gray-800 sm:px-6 sm:py-4">
+                      {index + 1}
                     </td>
 
-                    <td className="px-6 py-4 text-gray-600">{users.email}</td>
-                    <td className="px-6 py-4 text-gray-600">
-                      {users.systemRol}
+                    <td className="px-3 py-3 text-sm font-medium text-gray-800 sm:px-6 sm:py-4">
+                      {user.name}
                     </td>
 
-                    <td className="px-6 py-4">
-                      <div className="flex justify-end gap-10">
-                        <button type="submit">
+                    <td className="px-3 py-3 text-sm text-gray-600 sm:px-6 sm:py-4">
+                      {user.email}
+                    </td>
+
+                    <td className="px-3 py-3 text-sm text-gray-600 sm:px-6 sm:py-4">
+                      {user.systemRol}
+                    </td>
+
+                    <td className="px-3 py-3 sm:px-6 sm:py-4">
+                      <div className="flex justify-end gap-3">
+                        <button
+                          type="button"
+                          onClick={() => handleOpenPopup(userEditPopup)}
+                        >
                           <img
                             src={editar}
-                            type="submit"
-                            alt=""
-                            className="w-10 "
-                            onClick={() => handleOpenPopup(userEditPopup)}
+                            alt="Editar"
+                            className="w-7 sm:w-8"
                           />
                         </button>
-                        <button type="submit">
+
+                        <button
+                          type="button"
+                          onClick={() => handleOpenPopup(removePopup)}
+                        >
                           <img
                             src={borrar}
-                            alt=""
-                            className="w-10 "
-                            onClick={() => handleOpenPopup(removePopup)}
+                            alt="Eliminar"
+                            className="w-7 sm:w-8"
                           />
                         </button>
                       </div>
