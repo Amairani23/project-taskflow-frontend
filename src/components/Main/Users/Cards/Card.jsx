@@ -1,19 +1,23 @@
 import { useNavigate } from "react-router"
-import { tasks } from "../../../../data/tasks"
+import { useContext } from "react"
 
 import borrar from "../../../../images/borrar.png"
 import abrir from "../../../../images/abrir-doc.png"
+
 import RemoveCard from "../../../Popup/RemoveCard/RemoveCard"
 import CurrentUserContext from "../../../../contexts/CurrentUserContext"
-import { useContext } from "react"
 
 export default function Card({ card, onOpenPopup, onCardDelete }) {
   const navigate = useNavigate()
-  const { tasks } = useContext(CurrentUserContext)
+  const { usuarios, userEmail } = useContext(CurrentUserContext)
 
   const handleClick = () => {
     navigate(`/project/${card._id}`)
   }
+
+  const currentUser = usuarios.find((usuario) => usuario.email === userEmail)
+
+  const isOwner = currentUser._id == card.ownerId
 
   const removePopup = {
     title: "",
@@ -21,22 +25,8 @@ export default function Card({ card, onOpenPopup, onCardDelete }) {
   }
 
   function handleDeleteClick() {
-    console.log("Eliminando:", card._id)
     onCardDelete(card._id)
   }
-
-  //reduce() sirve para recorrer un array y construir un único resultado.
-  const tasksByProject = tasks.reduce((acc, task) => {
-    acc[task.idProject] = (acc[task.idProject] || 0) + 1
-    return acc //acumulador
-  }, {}) //empieza con un objeto vacio
-
-  const tasksByProjectPending = tasks.filter((task) => {
-    return (
-      (task.status === "pending" || task.status === "progress") &&
-      task.idProject === card._id
-    )
-  })
 
   return (
     <div className=" rounded-lg shadow-md p-8 bg-[#70CEBB]/48 text-white">
@@ -46,7 +36,7 @@ export default function Card({ card, onOpenPopup, onCardDelete }) {
           <div className="grid grid-cols-5 gap-4 items-center mt-3 ">
             {/* tareas */}
             <div className="rounded-lg text-right">
-              <p className="text-3xl">{tasksByProject[card._id] || 0}</p>
+              <p className="text-3xl">{card.totalTasks || 0}</p>
             </div>
             <div className="col-span-4 rounded-lg">
               <p>Tareas</p>
@@ -55,7 +45,7 @@ export default function Card({ card, onOpenPopup, onCardDelete }) {
           {/* pendientes */}
           <div className="grid grid-cols-5 gap-4 items-center">
             <div className="rounded-lg text-right">
-              <p className="text-3xl">{tasksByProjectPending.length}</p>
+              <p className="text-3xl">{card.pendingTasks || 0}</p>
             </div>
             <div className="col-span-4  rounded-lg">
               <p>Pendientes</p>
@@ -64,13 +54,14 @@ export default function Card({ card, onOpenPopup, onCardDelete }) {
         </div>
         <div>
           <div className="flex flex-col items-end gap-15">
-            <img
-              src={borrar}
-              alt="Imagen superior"
-              className="w-8 h-8 object-cover rounded-lg"
-              onClick={() => onOpenPopup(removePopup)}
-            />
-
+            {isOwner && (
+              <img
+                src={borrar}
+                alt="Imagen superior"
+                className="w-8 h-8 object-cover rounded-lg"
+                onClick={() => onOpenPopup(removePopup)}
+              />
+            )}
             <img
               src={abrir}
               alt="Imagen inferior"

@@ -1,17 +1,20 @@
-import { useContext, useState  } from "react"
-import guardar from "../../../../images/guardar-el-archivo.png"
+import { useContext, useState } from "react"
 import CurrentUserContext from "../../../../contexts/CurrentUserContext"
 
-export default function NewTaskUser({ handleClosePopup, projectId }) {
-  const { usuarios, projects, handleCreateTask } =
-    useContext(CurrentUserContext)
+import guardar from "../../../../images/guardar-el-archivo.png"
+
+export default function NewTaskUser({
+  handleClosePopup,
+  projectId,
+  onTaskCreated,
+}) {
+  const { handleCreateTask } = useContext(CurrentUserContext)
 
   const [title, setTitle] = useState("")
   const [status, setStatus] = useState("pending")
   const [priority, setPriority] = useState("alta")
 
   const [titleError, setTitleError] = useState("")
-  const [projectError, setProjectError] = useState("")
   const [priorityError, setPriorityError] = useState("")
 
   const handleTitleChange = (event) => {
@@ -27,7 +30,6 @@ export default function NewTaskUser({ handleClosePopup, projectId }) {
       setTitleError("")
     }
   }
-
 
   const handlePriorityChange = (event) => {
     const value = event.target.value
@@ -56,9 +58,7 @@ export default function NewTaskUser({ handleClosePopup, projectId }) {
       valid = false
     }
 
-
     if (!valid) return
-
 
     const data = {
       title,
@@ -69,7 +69,7 @@ export default function NewTaskUser({ handleClosePopup, projectId }) {
 
     try {
       await handleCreateTask(data)
-
+      onTaskCreated()
       handleClosePopup()
     } catch (error) {
       console.error("Error creando tarea:", error)
@@ -97,7 +97,6 @@ export default function NewTaskUser({ handleClosePopup, projectId }) {
         <span className="min-h-5 text-sm text-red-500">{titleError}</span>
       </label>
 
-
       <label className="popup__label">
         <select
           value={status}
@@ -120,7 +119,6 @@ export default function NewTaskUser({ handleClosePopup, projectId }) {
           required
           className="w-full rounded-lg border border-gray-600 bg-gray-800 px-4 py-3 text-sm text-white"
         >
-
           <option value="alta">Alta</option>
 
           <option value="media">Media</option>

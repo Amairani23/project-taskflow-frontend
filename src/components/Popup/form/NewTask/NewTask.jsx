@@ -209,7 +209,6 @@ export default function NewTask({ handleClosePopup }) {
         <span className="min-h-5 text-sm text-red-500">{priorityError}</span>
       </label>
 
-
       <p className="mb-1 text-xl font-semibold text-blue-300">
         Usuario asignado:
       </p>

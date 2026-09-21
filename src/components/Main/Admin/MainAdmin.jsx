@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { usePopup } from "../../../hooks/usePopup"
 
 import Popup from "../../Popup/Popup"
 import Dashboard from "./Dashboard/Dashboard"
@@ -6,9 +7,8 @@ import ProjectsAdmin from "./ProjectsAdmin/ProjectsAdmin"
 import TaskAdmin from "./TaskAdmin/TaskAdmin"
 import ProfileAdmin from "./ProfileAdmin/ProfileAdmin"
 import Sidebar from "../../Header/Sidebar"
-import { usePopup } from "../../../hooks/usePopup"
 
-export default function MainAdmin({ userEmail, onLogout}) {
+export default function MainAdmin({ userEmail, onLogout }) {
   const [section, setSection] = useState("inicio")
   const { popup, handleOpenPopup, handleClosePopup } = usePopup()
 

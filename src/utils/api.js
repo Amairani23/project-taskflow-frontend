@@ -113,12 +113,12 @@ class Api {
       method: "DELETE",
       headers: this._getHeaders(),
     }).then(async (res) => {
+      const data = await res.json()
       if (!res.ok) {
-        throw new Error(`Error: ${res.status}`)
+        throw new Error(data.message || `Error: ${res.status}`)
       }
-      const text = await res.text()
 
-      return true
+      return data
     })
   }
 
@@ -174,7 +174,6 @@ class Api {
         title: taskData.title,
         status: taskData.status,
         prioridad: taskData.prioridad,
-        assignedTo: taskData.assignedTo,
       }),
     }).then((res) => {
       if (res.ok) {

@@ -1,22 +1,24 @@
 import { useState, useEffect } from "react"
+import { useLogin } from "../../hooks/useLogin"
+import { useRegister } from "../../hooks/useRegister"
+import { usePopup } from "../../hooks/usePopup"
+import { Routes, Route, Navigate } from "react-router-dom"
+
 import Header from "../Header/Header"
 import Login from "../Login/Login"
 import Register from "../Register/Register"
-import { Routes, Route, Navigate } from "react-router-dom"
 import Footer from "../Footer/Footer"
 import MainUsers from "../Main/Users/MainUsers"
 import MainAdmin from "../Main/Admin/MainAdmin"
 import AdminRoute from "../ProtectedRoute/AdminRoute/AdminRoute"
 import UsersRoute from "../ProtectedRoute/UsersRoute/UsersRoute"
-import { useLogin } from "../../hooks/useLogin"
-import { useRegister } from "../../hooks/useRegister"
 import Project from "../Main/Users/Project/Project"
-import { usePopup } from "../../hooks/usePopup"
-import api from "../../utils/api"
 import CurrentUserContext from "../../contexts/CurrentUserContext"
+import Popup from "../Popup/Popup"
+import api from "../../utils/api"
 
 function App() {
-  const { handleOpenPopup, handleClosePopup } = usePopup()
+  const { popup, handleOpenPopup, handleClosePopup } = usePopup()
 
   //login
   const { user, userEmail, isLoggedIn, handleLogin, handleLogout } = useLogin(
@@ -25,7 +27,10 @@ function App() {
   )
 
   //registro
-  const { handleRegistration } = useRegister({handleOpenPopup, handleClosePopup})
+  const { handleRegistration } = useRegister({
+    handleOpenPopup,
+    handleClosePopup,
+  })
 
   //carga
   const [isLoading, setIsLoading] = useState(false)
@@ -37,7 +42,7 @@ function App() {
   const [tasks, setTasks] = useState([])
 
   useEffect(() => {
-    if (!isLoggedIn) return;
+    if (!isLoggedIn) return
 
     api
       .getUsers()
@@ -57,16 +62,26 @@ function App() {
         console.error("ERROR:", error)
       })
 
-    api
-      .getInitialTaskAdmin()
-      .then((data) => {
-        setTasks(data)
-      })
-      .catch((error) => {
-        console.error("ERROR:", error)
-      })
-
+    if (user === "admin") {
+      api
+        .getInitialTaskAdmin()
+        .then((data) => {
+          setTasks(data)
+        })
+        .catch((error) => {
+          console.error("Error tareas admin:", error)
+        })
+    }
   }, [isLoggedIn])
+
+  const loadTasks = async () => {
+    try {
+      const data = await api.getInitialTaskAdmin()
+      setTasks(data)
+    } catch (error) {
+      console.error("Error cargando tareas:", error)
+    }
+  }
 
   // Agregar proyectos
   const handleAddProjectsSubmit = async (data) => {
@@ -103,6 +118,7 @@ function App() {
       )
       return true
     } catch (error) {
+      console.error("ERROR REAL AL ELIMINAR PROYECTO:", error)
       console.error(error)
     }
   }
@@ -128,7 +144,7 @@ function App() {
             )
             return currentTasks
           }
-          
+
           return currentTasks.map((task) => {
             const currentTaskId = task._id || task.id
             return currentTaskId === updatedTaskId ? updatedTask : task
@@ -143,13 +159,21 @@ function App() {
     }
   }
 
+  const reloadProjects = async () => {
+    try {
+      const data = await api.getInitialProject()
+      setProjects(data)
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  //Agregar tarea
   const handleCreateTask = async (data) => {
     try {
-      const createdTask = await api.createTask(data, data.idProject)
-
-      if (createdTask) {
-        setTasks((currentTasks) => [...currentTasks, createdTask])
-      }
+      await api.createTask(data, data.idProject)
+      await loadTasks()
+      await reloadProjects()
     } catch (error) {
       console.error("Error creando tarea:", error)
 
@@ -165,6 +189,9 @@ function App() {
       setTasks((currentTasks) =>
         currentTasks.filter((currentTask) => currentTask._id !== task._id),
       )
+      console.log("TASK COMPLETA:", task)
+      console.log("TASK ID:", task._id)
+      console.log("PROJECT:", task.idProject)
 
       return true
     } catch (error) {
@@ -181,12 +208,15 @@ function App() {
           projects,
           tasks,
           user,
+          userEmail,
           handleAddProjectsSubmit,
           handleUpdateProject,
           handleDeleteProject,
           handleUpdateTask,
           handleCreateTask,
           handleDeleteTask,
+          reloadProjects,
+          loadTasks,
         }}
       >
         <Header
@@ -242,6 +272,11 @@ function App() {
           />
         </Routes>
         <Footer />
+        {popup && (
+          <Popup onClose={handleClosePopup} title={popup.title}>
+            {popup.children}
+          </Popup>
+        )}
       </CurrentUserContext.Provider>
     </>
   )

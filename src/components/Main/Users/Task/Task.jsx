@@ -1,17 +1,54 @@
 import { useContext } from "react"
+
 import CurrentUserContext from "../../../../contexts/CurrentUserContext"
-
-import editar from "../../../../images/editar.png"
-
 import EditTaks from "../../../Popup/form/EditTak/EditTak"
 
-export default function Task({ task, onOpenPopup, handleClosePopup, id}) {
-  const { usuarios } = useContext(CurrentUserContext)
-  const userAssigned = usuarios.find((user) => user._id === task.assignedTo)
+import editar from "../../../../images/editar.png"
+import borrar from "../../../../images/borrar.png"
+import RemoveCard from "../../../Popup/RemoveCard/RemoveCard"
+
+export default function Task({
+  task,
+  onOpenPopup,
+  handleClosePopup,
+  id,
+  onTaskUpdated,
+  handleUpdateTask,
+  onCardDelete,
+}) {
+  const { usuarios, userEmail } = useContext(CurrentUserContext)
+
+  const currentUser = usuarios.find((user) => user.email === userEmail)
+
+  const isAssignedToMe =
+    task.assignedTo?._id === currentUser?._id ||
+    task.assignedTo === currentUser?._id
+
+  const assignedUser =
+    typeof task.assignedTo === "object"
+      ? task.assignedTo
+      : usuarios.find((user) => user._id === task.assignedTo)
 
   const editTaskPopup = {
     title: "Editar tarea",
-    children: <EditTaks task={task} handleClosePopup={handleClosePopup} proyectoAsociado={id} />,
+    children: (
+      <EditTaks
+        task={task}
+        handleClosePopup={handleClosePopup}
+        proyectoAsociado={id}
+        onTaskUpdated={onTaskUpdated}
+        handleUpdateTask={handleUpdateTask}
+      />
+    ),
+  }
+
+  const removePopup = {
+    title: "",
+    children: <RemoveCard onDelete={handleDeleteClick} />,
+  }
+
+  function handleDeleteClick() {
+    onCardDelete(task._id)
   }
 
   return (
@@ -21,20 +58,31 @@ export default function Task({ task, onOpenPopup, handleClosePopup, id}) {
           {/* tareas */}
           <div className="col-span-4 rounded-lg text-left mb-3">
             <h3 className="font-semibold">Tarea: {task.title}</h3>
-            <p>
-              Asignado a: {userAssigned ? userAssigned.name : "Sin asignar"}
-            </p>
+            <p>Asignado a: {assignedUser?.name || "Sin asignar"}</p>
           </div>
           <div className="rounded-lg text-right">
-            <img
-              src={editar}
-              alt="Imagen superior"
-              className="w-8 h-8 object-cover rounded-lg"
-              onClick={() => onOpenPopup(editTaskPopup)}
-            />
+            {isAssignedToMe && (
+              <img
+                src={editar}
+                alt="Imagen superior"
+                className="w-8 h-8 object-cover rounded-lg"
+                onClick={() => onOpenPopup(editTaskPopup)}
+              />
+            )}
           </div>
         </div>
-        <div className="flex flex-col items-end border-t border-gray-300 pt-2">
+        <div className="flex items-center justify-between border-t border-gray-300 pt-2">
+          <div className="rounded-lg">
+            {!assignedUser && (
+              <img
+                src={borrar}
+                alt="Imagen superior"
+                className="w-5 h-5 object-cover rounded-lg"
+                onClick={() => onOpenPopup(removePopup)}
+              />
+            )}
+          </div>
+
           <div className="flex items-center gap-2 ">
             <p className="capitalize">{task.prioridad}</p>
 

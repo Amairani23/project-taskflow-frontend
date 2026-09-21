@@ -165,7 +165,7 @@ export default function TaskAdmin({ handleOpenPopup, handleClosePopup }) {
                             setTaskToDelete(task._id)
 
                             handleOpenPopup({
-                              title: "Eliminar proyecto",
+                              title: "",
                               children: (
                                 <RemoveCard
                                   onDelete={() => handleDeleteClick(task._id)}

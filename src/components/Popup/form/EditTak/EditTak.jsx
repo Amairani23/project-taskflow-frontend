@@ -3,8 +3,13 @@ import guardar from "../../../../images/guardar-el-archivo.png"
 import cerrar from "../../../../images/cerrar-simbolo-de-boton-circular-blanco.png"
 import CurrentUserContext from "../../../../contexts/CurrentUserContext"
 
-export default function EditTak({ task, handleClosePopup, proyectoAsociado }) {
-  const { usuarios, handleUpdateTask, user } = useContext(CurrentUserContext)
+export default function EditTak({
+  task,
+  handleClosePopup,
+  proyectoAsociado,
+  onTaskUpdated,
+}) {
+  const { usuarios, user, handleUpdateTask } = useContext(CurrentUserContext)
 
   const [title, setTitle] = useState(task.title || "")
   const [status, setStatus] = useState(task.status || "")
@@ -109,6 +114,7 @@ export default function EditTak({ task, handleClosePopup, proyectoAsociado }) {
     }
     try {
       await handleUpdateTask(data)
+      onTaskUpdated()
       handleClosePopup()
     } catch (error) {
       console.error("Error actualizando tarea:", error)
@@ -189,43 +195,47 @@ export default function EditTak({ task, handleClosePopup, proyectoAsociado }) {
 
         <span className="min-h-5 text-sm text-red-500">{priorityError}</span>
       </label>
-{user === "admin" && (<>
-      <p className="mb-3 text-xl font-semibold text-blue-300">
-        Usuario asignado a la tarea:
-      </p>
+      {user === "admin" && (
+        <>
+          <p className="mb-3 text-xl font-semibold text-blue-300">
+            Usuario asignado a la tarea:
+          </p>
 
-      {assignedTo && (
-        <div className="flex w-full items-center justify-between rounded-lg border border-gray-700 bg-gray-800 px-4 py-3">
-          <span className="text-white">
-            {fullAssignedUser?.name || "Usuario"}
-          </span>
+          {assignedTo && (
+            <div className="flex w-full items-center justify-between rounded-lg border border-gray-700 bg-gray-800 px-4 py-3">
+              <span className="text-white">
+                {fullAssignedUser?.name || "Usuario"}
+              </span>
 
-          <button
-            className="flex h-8 w-8 items-center justify-center rounded-full transition hover:bg-red-600"
-            type="button"
-            onClick={handleRemoveUser}
+              <button
+                className="flex h-8 w-8 items-center justify-center rounded-full transition hover:bg-red-600"
+                type="button"
+                onClick={handleRemoveUser}
+              >
+                <img src={cerrar} alt="Eliminar usuario" className="w-4" />
+              </button>
+            </div>
+          )}
+
+          <select
+            value=""
+            onChange={handleAddUser}
+            className="w-full cursor-pointer rounded-lg border border-gray-600 bg-gray-800 px-4 py-3 text-sm text-white outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/30"
           >
-            <img src={cerrar} alt="Eliminar usuario" className="w-4" />
-          </button>
-        </div>
+            <option value="" disabled>
+              {assignedTo
+                ? "Cambiar usuario"
+                : "Seleccionar usuario del proyecto"}
+            </option>
+
+            {projectUsers.map((user) => (
+              <option key={user._id} value={user._id}>
+                {user.name}
+              </option>
+            ))}
+          </select>
+        </>
       )}
-
-      <select
-        value=""
-        onChange={handleAddUser}
-        className="w-full cursor-pointer rounded-lg border border-gray-600 bg-gray-800 px-4 py-3 text-sm text-white outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/30"
-      >
-        <option value="" disabled>
-          {assignedTo ? "Cambiar usuario" : "Seleccionar usuario del proyecto"}
-        </option>
-
-        {projectUsers.map((user) => (
-          <option key={user._id} value={user._id}>
-            {user.name}
-          </option>
-        ))}
-      </select>
-      </>)}
 
       <div className="mt-6 flex justify-end gap-5">
         <button type="submit">

@@ -5,29 +5,26 @@ import Card from "./Cards/Card"
 import Popup from "../../Popup/Popup"
 import NewProject from "../../Popup/form/NewProject/NewProject"
 import { usePopup } from "../../../hooks/usePopup"
-import { useContext, useState } from "react"
+import { useContext } from "react"
 import CurrentUserContext from "../../../contexts/CurrentUserContext"
 
-export default function MainUsers({userRole}) {
+export default function MainUsers({ userRole }) {
   const { projects, handleDeleteProject } = useContext(CurrentUserContext)
   const { popup, handleOpenPopup, handleClosePopup } = usePopup()
-  const [cards, setCards] = useState(projects)
-  
 
   const addProjectPopup = {
-      title: "Nuevo proyecto",
-      children: <NewProject handleClosePopup={handleClosePopup} userRole={userRole} />,
-    }
+    title: "Nuevo proyecto",
+    children: (
+      <NewProject handleClosePopup={handleClosePopup} userRole={userRole} />
+    ),
+  }
 
   async function handleDeleteClick(projectId) {
-    console.log("MainUsers recibió:", projectId)
     const deleted = await handleDeleteProject(projectId)
 
     if (deleted) {
-      setCards((prevCards) => prevCards.filter((card) => card._id !== projectId))
       handleClosePopup()
-    
-  }
+    }
   }
 
   return (

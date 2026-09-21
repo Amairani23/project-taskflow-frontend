@@ -136,7 +136,7 @@ export default function ProjectsAdmin({ handleOpenPopup, handleClosePopup }) {
                               setProjectToDelete(project._id)
 
                               handleOpenPopup({
-                                title: "Eliminar proyecto",
+                                title: "",
                                 children: (
                                   <RemoveCard
                                     onDelete={() =>
