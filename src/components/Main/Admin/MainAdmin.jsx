@@ -8,7 +8,7 @@ import ProfileAdmin from "./ProfileAdmin/ProfileAdmin"
 import Sidebar from "../../Header/Sidebar"
 import { usePopup } from "../../../hooks/usePopup"
 
-export default function MainAdmin({ userEmail, onLogout }) {
+export default function MainAdmin({ userEmail, onLogout}) {
   const [section, setSection] = useState("inicio")
   const { popup, handleOpenPopup, handleClosePopup } = usePopup()
 

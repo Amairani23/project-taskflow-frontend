@@ -4,9 +4,12 @@ import { tasks } from "../../../../data/tasks"
 import borrar from "../../../../images/borrar.png"
 import abrir from "../../../../images/abrir-doc.png"
 import RemoveCard from "../../../Popup/RemoveCard/RemoveCard"
+import CurrentUserContext from "../../../../contexts/CurrentUserContext"
+import { useContext } from "react"
 
 export default function Card({ card, onOpenPopup, onCardDelete }) {
   const navigate = useNavigate()
+  const { tasks } = useContext(CurrentUserContext)
 
   const handleClick = () => {
     navigate(`/project/${card._id}`)

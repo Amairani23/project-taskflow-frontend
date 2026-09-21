@@ -1,7 +1,5 @@
 import { useParams } from "react-router"
 
-import { projects } from "../../../../data/projects"
-import { tasks } from "../../../../data/tasks"
 import { useNavigate } from "react-router"
 import { usePopup } from "../../../../hooks/usePopup"
 
@@ -12,15 +10,35 @@ import agregar from "../../../../images/btn-add-project.png"
 import Task from "../Task/Task"
 import NewTaks from "../../../Popup/form/NewTask/NewTask"
 import Popup from "../../../Popup/Popup"
+import CurrentUserContext from "../../../../contexts/CurrentUserContext"
+import { useContext, useEffect, useState } from "react"
+import NewTaskUser from "../../../Popup/form/NewTask/NewTaskUser"
+import api from "../../../../utils/api"
 
 export default function Project() {
+  const { projects } = useContext(CurrentUserContext)
   const { id } = useParams()
   const { popup, handleOpenPopup, handleClosePopup } = usePopup()
+  const [tasksState, setTasksState] = useState([])
 
   const project = projects.find((project) => project._id === id)
-  const projectTasks = project
-    ? tasks.filter((task) => task.idProject === project._id)
-    : []
+
+   useEffect(() => {
+  if (!id) return
+
+  api
+    .getInitialTask(id)
+    .then((data) => {
+      setTasksState(data)
+    })
+    .catch((error) => {
+      console.error("ERROR:", error)
+    })
+}, [id])
+
+
+  const projectTasks = tasksState
+ 
 
   const pendingTasks = projectTasks.filter((task) => task.status === "pending")
 
@@ -36,8 +54,9 @@ export default function Project() {
 
   const addTaskPopup = {
     title: "Nueva tarea",
-    children: <NewTaks />,
+    children: <NewTaskUser handleClosePopup={handleClosePopup} projectId={project._id} />,
   }
+
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#02216B] to-[#CD4BE7]">
@@ -47,7 +66,7 @@ export default function Project() {
             <div className="flex justify-between mb-6">
               <div>
                 <h1 className="text-white text-4xl ">{project.titleProject}</h1>
-                <p className="text-white text-2xl ">
+                <p className="text-white text-1xl ">
                   Descripción: {project.descriptionProject}
                 </p>
               </div>
@@ -73,6 +92,8 @@ export default function Project() {
                     key={task._id}
                     task={task}
                     onOpenPopup={handleOpenPopup}
+                    handleClosePopup={handleClosePopup}
+                    id={id}
                   />
                 ))}
               </div>
@@ -86,6 +107,8 @@ export default function Project() {
                     key={task._id}
                     task={task}
                     onOpenPopup={handleOpenPopup}
+                    handleClosePopup={handleClosePopup}
+                    id={id}
                   />
                 ))}
               </div>
@@ -99,6 +122,8 @@ export default function Project() {
                     key={task._id}
                     task={task}
                     onOpenPopup={handleOpenPopup}
+                    handleClosePopup={handleClosePopup}
+                    id={id}
                   />
                 ))}
               </div>

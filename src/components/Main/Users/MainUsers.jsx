@@ -1,25 +1,33 @@
-import { projects } from "../../../data/projects"
-
 import agregar from "../../../images/btn-add-project.png"
 
 import Card from "./Cards/Card"
+
 import Popup from "../../Popup/Popup"
 import NewProject from "../../Popup/form/NewProject/NewProject"
 import { usePopup } from "../../../hooks/usePopup"
-import { useState } from "react"
+import { useContext, useState } from "react"
+import CurrentUserContext from "../../../contexts/CurrentUserContext"
 
-export default function MainUsers() {
+export default function MainUsers({userRole}) {
+  const { projects, handleDeleteProject } = useContext(CurrentUserContext)
   const { popup, handleOpenPopup, handleClosePopup } = usePopup()
   const [cards, setCards] = useState(projects)
+  
 
   const addProjectPopup = {
-    title: "Nuevo proyecto",
-    children: <NewProject />,
-  }
+      title: "Nuevo proyecto",
+      children: <NewProject handleClosePopup={handleClosePopup} userRole={userRole} />,
+    }
 
-  function handleDeleteClick(cardId) {
-    console.log("MainUsers recibió:", cardId)
-    setCards((prevCards) => prevCards.filter((card) => card.id !== cardId))
+  async function handleDeleteClick(projectId) {
+    console.log("MainUsers recibió:", projectId)
+    const deleted = await handleDeleteProject(projectId)
+
+    if (deleted) {
+      setCards((prevCards) => prevCards.filter((card) => card._id !== projectId))
+      handleClosePopup()
+    
+  }
   }
 
   return (
@@ -37,7 +45,7 @@ export default function MainUsers() {
           </button>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {cards.map((card) => (
+          {projects.map((card) => (
             <Card
               key={card._id}
               card={card}

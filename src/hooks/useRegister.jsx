@@ -2,14 +2,14 @@ import * as auth from "../utils/auth"
 import { useNavigate } from "react-router-dom"
 import InfoTooltip from "../components/Popup/InfoTooltip/InfoTooltip"
 
-export const useRegister = (handleOpenPopup, handleClosePopup) => {
+export const useRegister = ( {handleOpenPopup, handleClosePopup}) => {
   const navigate = useNavigate()
 
   const handleRegistration = (data) => {
     auth
       .register(data)
       .then((res) => {
-        console.log("Registro exitoso", res)
+        console.log("Registro exitoso")
         handleOpenPopup({
           title: "",
           children: <InfoTooltip isSuccess={true} />,

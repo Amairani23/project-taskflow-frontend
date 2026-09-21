@@ -1,4 +1,4 @@
-import { useState } from "react"
+import {  useState } from "react"
 
 export default function NarBar({ userEmail, onLogout }) {
   const [open, setOpen] = useState(false)
@@ -58,6 +58,8 @@ export default function NarBar({ userEmail, onLogout }) {
               {userEmail}
             </a>
           </li>
+
+        
 
           <li className="nav__item">
             <a

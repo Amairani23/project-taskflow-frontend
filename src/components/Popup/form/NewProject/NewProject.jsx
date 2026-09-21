@@ -4,7 +4,7 @@ import CurrentUserContext from "../../../../contexts/CurrentUserContext"
 
 import cerrar from "../../../../images/cerrar-simbolo-de-boton-circular-blanco.png"
 
-export default function NewProject({ handleClosePopup }) {
+export default function NewProject({ handleClosePopup, userRole }) {
   const { usuarios, handleAddProjectsSubmit } = useContext(CurrentUserContext)
 
   const [title, setTitle] = useState("")
@@ -83,7 +83,7 @@ export default function NewProject({ handleClosePopup }) {
           {descriptionRefError}
         </span>
       </label>
-
+    {userRole === "admin" && (<>
       <p className="mb-3 text-xl font-semibold text-blue-300">
         Usuarios asignados al proyecto:
       </p>
@@ -146,6 +146,8 @@ export default function NewProject({ handleClosePopup }) {
           </option>
         ))}
       </select>
+
+</>)}
 
       <div className="flex justify-end gap-5 mt-6">
         <button type="submit">

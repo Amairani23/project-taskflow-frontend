@@ -2,6 +2,8 @@ import successImage from "../../../images/success.png"
 import errorImage from "../../../images/error.png"
 
 export default function InfoTooltip({ isSuccess }) {
+console.log("Ya llego a el popup, deveria verse en este punto")
+
   return (
     <div className="popup__content content__infoTool">
       <img

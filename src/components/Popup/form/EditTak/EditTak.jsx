@@ -4,7 +4,7 @@ import cerrar from "../../../../images/cerrar-simbolo-de-boton-circular-blanco.p
 import CurrentUserContext from "../../../../contexts/CurrentUserContext"
 
 export default function EditTak({ task, handleClosePopup, proyectoAsociado }) {
-  const { usuarios, handleUpdateTask } = useContext(CurrentUserContext)
+  const { usuarios, handleUpdateTask, user } = useContext(CurrentUserContext)
 
   const [title, setTitle] = useState(task.title || "")
   const [status, setStatus] = useState(task.status || "")
@@ -189,7 +189,7 @@ export default function EditTak({ task, handleClosePopup, proyectoAsociado }) {
 
         <span className="min-h-5 text-sm text-red-500">{priorityError}</span>
       </label>
-
+{user === "admin" && (<>
       <p className="mb-3 text-xl font-semibold text-blue-300">
         Usuario asignado a la tarea:
       </p>
@@ -225,6 +225,7 @@ export default function EditTak({ task, handleClosePopup, proyectoAsociado }) {
           </option>
         ))}
       </select>
+      </>)}
 
       <div className="mt-6 flex justify-end gap-5">
         <button type="submit">

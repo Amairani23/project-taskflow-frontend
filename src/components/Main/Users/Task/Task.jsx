@@ -1,15 +1,17 @@
-import { users } from "../../../../data/users"
+import { useContext } from "react"
+import CurrentUserContext from "../../../../contexts/CurrentUserContext"
 
 import editar from "../../../../images/editar.png"
 
 import EditTaks from "../../../Popup/form/EditTak/EditTak"
 
-export default function Task({ task, onOpenPopup }) {
-  const userAssigned = users.find((user) => user._id === task.assignade)
+export default function Task({ task, onOpenPopup, handleClosePopup, id}) {
+  const { usuarios } = useContext(CurrentUserContext)
+  const userAssigned = usuarios.find((user) => user._id === task.assignedTo)
 
   const editTaskPopup = {
     title: "Editar tarea",
-    children: <EditTaks />,
+    children: <EditTaks task={task} handleClosePopup={handleClosePopup} proyectoAsociado={id} />,
   }
 
   return (

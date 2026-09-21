@@ -25,7 +25,7 @@ function App() {
   )
 
   //registro
-  const { handleRegistration } = useRegister(handleOpenPopup, handleClosePopup)
+  const { handleRegistration } = useRegister({handleOpenPopup, handleClosePopup})
 
   //carga
   const [isLoading, setIsLoading] = useState(false)
@@ -37,6 +37,8 @@ function App() {
   const [tasks, setTasks] = useState([])
 
   useEffect(() => {
+    if (!isLoggedIn) return;
+
     api
       .getUsers()
       .then((data) => {
@@ -63,7 +65,8 @@ function App() {
       .catch((error) => {
         console.error("ERROR:", error)
       })
-  }, [])
+
+  }, [isLoggedIn])
 
   // Agregar proyectos
   const handleAddProjectsSubmit = async (data) => {
@@ -104,10 +107,9 @@ function App() {
     }
   }
 
-  //Editar proyecto
+  //Editar tarea
   const handleUpdateTask = async (data) => {
     try {
-      // data.id o data._id debe ser el taskId correcto de 24 caracteres
       const taskId = data.id || data._id
       const updatedTask = await api.updateTaskAdmin(
         data,
@@ -115,7 +117,6 @@ function App() {
         taskId,
       )
 
-      // 1. CORREGIDO: Evaluamos tanto ._id como .id de la respuesta del backend
       if (updatedTask && (updatedTask._id || updatedTask.id)) {
         const updatedTaskId = updatedTask._id || updatedTask.id
 
@@ -127,8 +128,7 @@ function App() {
             )
             return currentTasks
           }
-
-          // 2. CORREGIDO: Buscamos la tarea por cualquiera de sus formas de ID posibles
+          
           return currentTasks.map((task) => {
             const currentTaskId = task._id || task.id
             return currentTaskId === updatedTaskId ? updatedTask : task
@@ -180,6 +180,7 @@ function App() {
           usuarios,
           projects,
           tasks,
+          user,
           handleAddProjectsSubmit,
           handleUpdateProject,
           handleDeleteProject,
