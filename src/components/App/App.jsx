@@ -41,6 +41,8 @@ function App() {
   const [projects, setProjects] = useState([])
   const [tasks, setTasks] = useState([])
 
+  const userInfo = usuarios.find((usuario) => usuario.email === userEmail)
+
   useEffect(() => {
     if (!isLoggedIn) return
 
@@ -118,7 +120,6 @@ function App() {
       )
       return true
     } catch (error) {
-      console.error("ERROR REAL AL ELIMINAR PROYECTO:", error)
       console.error(error)
     }
   }
@@ -153,9 +154,6 @@ function App() {
       }
     } catch (error) {
       console.error("Error capturado al actualizar la tarea:", error)
-      alert(
-        "No se pudo actualizar la tarea. Hubo un problema en el servidor (Error 500).",
-      )
     }
   }
 
@@ -189,9 +187,6 @@ function App() {
       setTasks((currentTasks) =>
         currentTasks.filter((currentTask) => currentTask._id !== task._id),
       )
-      console.log("TASK COMPLETA:", task)
-      console.log("TASK ID:", task._id)
-      console.log("PROJECT:", task.idProject)
 
       return true
     } catch (error) {
@@ -199,6 +194,49 @@ function App() {
       return false
     }
   }
+
+  //Editar Rol del usuario
+ const handleUpdateUseraAdmin = async (data) => {
+  try {
+    const newData = await api.updateUserAdmin(data, data.id)
+
+    setUsuarios((usuarios) =>
+      usuarios.map((usuario) =>
+        usuario._id === newData._id ? newData : usuario
+      )
+    )
+
+    handleClosePopup()
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+
+
+  const handleUpdateUser = (data) => {
+    (async () => {
+      await api
+        .updateUserInfo(data)
+        .then((newData) => {
+          setUsuarios(newData);
+          handleClosePopup();
+        })
+        .catch((error) => console.error(error));
+    })();
+  };
+
+  const handleUpdateAvatar = (data) => {
+    (async () => {
+      await api
+        .updateAvatar(data)
+        .then((newData) => {
+          setUsuarios(newData);
+          handleClosePopup();
+        })
+        .catch((error) => console.error(error));
+    })();
+  };
 
   return (
     <>
@@ -209,6 +247,10 @@ function App() {
           tasks,
           user,
           userEmail,
+          userInfo,
+          handleUpdateUser,
+          handleUpdateAvatar,
+          handleUpdateUseraAdmin,
           handleAddProjectsSubmit,
           handleUpdateProject,
           handleDeleteProject,
@@ -221,7 +263,6 @@ function App() {
       >
         <Header
           userRole={user}
-          userEmail={userEmail}
           isLoggedIn={isLoggedIn}
           onLogout={handleLogout}
         />
@@ -237,7 +278,7 @@ function App() {
             path="/admin"
             element={
               <AdminRoute isLoggedIn={isLoggedIn}>
-                <MainAdmin userEmail={userEmail} onLogout={handleLogout} />
+                <MainAdmin onLogout={handleLogout} />
               </AdminRoute>
             }
           />

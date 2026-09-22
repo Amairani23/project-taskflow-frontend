@@ -26,6 +26,26 @@ class Api {
   }
 
   // Edita información del usuario
+  updateUserAdmin(userData, userId) {
+    return fetch(`${this.baseUrl}/users/${userId}`, {
+      method: "PATCH",
+      headers: this._getHeaders(),
+      body: JSON.stringify({
+        systemRol: userData.systemRol ,
+      }),
+      
+    }).then(async (res) => {
+    const data = await res.json()
+
+    if (!res.ok) {
+      throw new Error(data.message || `Error: ${res.status}`)
+    }
+
+    return data
+  })
+}
+
+  // Edita información del usuario
   updateUserInfo(userData) {
     return fetch(`${this.baseUrl}/users/me`, {
       method: "PATCH",
@@ -195,7 +215,6 @@ class Api {
         assignedTo: taskData.assignedTo,
       }),
     }).then((res) => {
-      console.log("DELETE status:", res.status)
       if (res.ok) {
         return res.json()
       }

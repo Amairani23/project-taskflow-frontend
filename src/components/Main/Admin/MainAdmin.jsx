@@ -8,7 +8,7 @@ import TaskAdmin from "./TaskAdmin/TaskAdmin"
 import ProfileAdmin from "./ProfileAdmin/ProfileAdmin"
 import Sidebar from "../../Header/Sidebar"
 
-export default function MainAdmin({ userEmail, onLogout }) {
+export default function MainAdmin({  onLogout }) {
   const [section, setSection] = useState("inicio")
   const { popup, handleOpenPopup, handleClosePopup } = usePopup()
 
@@ -18,7 +18,8 @@ export default function MainAdmin({ userEmail, onLogout }) {
       <Sidebar
         setSection={setSection}
         onLogout={onLogout}
-        userEmail={userEmail}
+        handleOpenPopup={handleOpenPopup}
+        handleClosePopup={handleClosePopup}
       />
 
       {/* Contenido */}
@@ -40,7 +41,7 @@ export default function MainAdmin({ userEmail, onLogout }) {
         )}
 
         {section === "perfil" && (
-          <ProfileAdmin handleOpenPopup={handleOpenPopup} />
+          <ProfileAdmin handleOpenPopup={handleOpenPopup} handleClosePopup={handleClosePopup} />
         )}
       </section>
       {popup && (

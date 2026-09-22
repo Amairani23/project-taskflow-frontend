@@ -1,7 +1,9 @@
-import {  useState } from "react"
+import {  useContext, useState } from "react"
+import CurrentUserContext from "../../contexts/CurrentUserContext"
 
-export default function NarBar({ userEmail, onLogout }) {
+export default function NarBar({ onLogout }) {
   const [open, setOpen] = useState(false)
+  const {userInfo} = useContext(CurrentUserContext)
 
   return (
     <nav className="bg-[#02216B] text-white">
@@ -53,10 +55,38 @@ export default function NarBar({ userEmail, onLogout }) {
             px-10 md:px-0
             py-4 md:py-0`}
         >
-          <li className="nav__item">
-            <a className="hover:text-[#CD4BE7] transition-colors" href="#">
-              {userEmail}
-            </a>
+
+          <li>
+          <div className="flex items-center gap-3">
+  <div className="group relative h-12 w-12">
+    <img
+      src={userInfo.avatar}
+      alt={userInfo.name}
+      className="h-12 w-12 rounded-full border-2 border-gray-600 object-cover"
+    />
+
+    {/* Overlay solo sobre la imagen */}
+    <div className="absolute inset-0 flex items-center justify-center rounded-full bg-black/60 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+      <button
+        type="button"
+        className="text-white"
+        aria-label="Editar perfil"
+      >
+        ✎
+      </button>
+    </div>
+  </div>
+
+  <div className="flex flex-col">
+    <span className="text-sm font-semibold text-white">
+      {userInfo.name}
+    </span>
+
+    <span className="text-xs text-gray-400">
+      {userInfo.email}
+    </span>
+  </div>
+</div>
           </li>
 
         

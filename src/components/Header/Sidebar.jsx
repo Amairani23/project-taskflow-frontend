@@ -1,13 +1,21 @@
-import { useState } from "react"
+import { useContext, useState } from "react"
 import logo from "../../images/logo-horizontal-v.png"
+import CurrentUserContext from "../../contexts/CurrentUserContext"
+import EditUsers from "../Popup/form/EditUsers/EditUsers"
 
-export default function Sidebar({ userEmail, setSection, onLogout }) {
+export default function Sidebar({ setSection, onLogout, handleOpenPopup, handleClosePopup }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const {userInfo} = useContext(CurrentUserContext)
 
   const handleSection = (section) => {
     setSection(section)
     setIsMenuOpen(false)
   }
+
+  const editUserInfo = {
+      title: "Editar perfil",
+      children: <EditUsers user={userInfo} handleClosePopup={handleClosePopup} />,
+    }
 
   return (
     <>
@@ -61,14 +69,46 @@ export default function Sidebar({ userEmail, setSection, onLogout }) {
       <nav
         className={`
           fixed left-0 top-0 z-40 flex h-screen w-64 flex-col
-          bg-[#02216B] p-6 text-white shadow-xl
+          bg-[#02216B] p-5 text-white shadow-xl
           transition-transform duration-300
           lg:translate-x-0
           ${isMenuOpen ? "translate-x-0" : "-translate-x-full"}
         `}
       >
         <img alt="Logo" className="mb-5 w-full object-contain" src={logo} />
-        <p className="text-1xl pb-6 text-[#07afa0]"> {userEmail}</p>
+
+        <div className="flex items-center gap-3 pb-5 pl-3 pt-2">
+          <div className="group relative h-12 w-12">
+            <img
+              src={userInfo.avatar}
+              alt={userInfo.name}
+              className="h-12 w-12 rounded-full border-2 border-gray-600 object-cover"
+            />
+
+            {/* Overlay solo sobre la imagen */}
+            <div className="absolute inset-0 flex items-center justify-center rounded-full bg-black/60 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+              <button
+                type="button"
+                className="text-white"
+                aria-label="Editar perfil"
+                onClick={() => handleOpenPopup(editUserInfo)}
+              >
+                ✎
+              </button>
+            </div>
+          </div>
+
+          <div className="flex flex-col">
+            <span className="text-sm font-semibold text-white">
+              {userInfo.name}
+            </span>
+
+            <span className="text-xs text-gray-400">
+              {userInfo.email}
+            </span>
+          </div>
+        </div>
+
 
         <div className="flex flex-col gap-3">
           <button

@@ -2,7 +2,7 @@ import logo from "../../images/logo-horizontal-v.png"
 import { Link, useLocation } from "react-router"
 import NarBar from "./NarBar"
 
-export default function Header({ userRole, userEmail, isLoggedIn, onLogout }) {
+export default function Header({ userRole, isLoggedIn, onLogout }) {
   const location = useLocation()
 
   return (
@@ -32,7 +32,7 @@ export default function Header({ userRole, userEmail, isLoggedIn, onLogout }) {
       )}
 
       {isLoggedIn && userRole === "colaborador" && (
-        <NarBar userEmail={userEmail} onLogout={onLogout} />
+        <NarBar onLogout={onLogout}/>
       )}
     </header>
   )

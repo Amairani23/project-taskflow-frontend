@@ -2,17 +2,12 @@ import editar from "../../../../images/editar.png"
 import borrar from "../../../../images/borrar.png"
 
 import RemoveCard from "../../../Popup/RemoveCard/RemoveCard"
-import EditUsers from "../../../Popup/form/EditUsers/EditUsers"
 import CurrentUserContext from "../../../../contexts/CurrentUserContext"
 import { useContext } from "react"
+import EditUsersAdmin from "../../../Popup/form/EditUsers/EditUserAdmin"
 
-export default function ProfileAdmin({ handleOpenPopup }) {
+export default function ProfileAdmin({ handleOpenPopup, handleClosePopup }) {
   const { usuarios } = useContext(CurrentUserContext)
-
-  const userEditPopup = {
-    title: "Editar usuario",
-    children: <EditUsers />,
-  }
 
   function handleDeleteClick() {
     console.log("Eliminando usuario")
@@ -83,7 +78,11 @@ export default function ProfileAdmin({ handleOpenPopup }) {
                       <div className="flex justify-end gap-3">
                         <button
                           type="button"
-                          onClick={() => handleOpenPopup(userEditPopup)}
+                          onClick={() => handleOpenPopup({
+                            title: "Editar usuario",
+                            children: <EditUsersAdmin user={user} handleClosePopup={handleClosePopup} />,
+                          }
+                        )}
                         >
                           <img
                             src={editar}

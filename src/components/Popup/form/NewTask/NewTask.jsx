@@ -8,7 +8,7 @@ export default function NewTask({ handleClosePopup }) {
 
   const [title, setTitle] = useState("")
   const [status, setStatus] = useState("pending")
-  const [priority, setPriority] = useState("")
+  const [priority, setPriority] = useState("alta")
   const [projectId, setProjectId] = useState("")
   const [assignedTo, setAssignedTo] = useState(null)
 
@@ -195,9 +195,6 @@ export default function NewTask({ handleClosePopup }) {
           required
           className="w-full rounded-lg border border-gray-600 bg-gray-800 px-4 py-3 text-sm text-white"
         >
-          <option value="" disabled>
-            Seleccionar prioridad
-          </option>
 
           <option value="alta">Alta</option>
 
