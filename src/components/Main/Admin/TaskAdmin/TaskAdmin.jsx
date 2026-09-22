@@ -66,6 +66,14 @@ export default function TaskAdmin({ handleOpenPopup, handleClosePopup }) {
                 </th>
 
                 <th className="px-3 py-3 text-xs font-semibold sm:px-6 sm:py-4 sm:text-sm">
+                  Proyecto
+                </th>
+
+                <th className="px-3 py-3 text-xs font-semibold sm:px-6 sm:py-4 sm:text-sm">
+                  Creado por
+                </th>
+
+                <th className="px-3 py-3 text-xs font-semibold sm:px-6 sm:py-4 sm:text-sm">
                   Tarea
                 </th>
 
@@ -75,10 +83,6 @@ export default function TaskAdmin({ handleOpenPopup, handleClosePopup }) {
 
                 <th className="px-3 py-3 text-xs font-semibold sm:px-6 sm:py-4 sm:text-sm">
                   Prioridad
-                </th>
-
-                <th className="px-3 py-3 text-xs font-semibold sm:px-6 sm:py-4 sm:text-sm">
-                  Proyecto
                 </th>
 
                 <th className="px-3 py-3 text-xs font-semibold sm:px-6 sm:py-4 sm:text-sm">
@@ -106,6 +110,11 @@ export default function TaskAdmin({ handleOpenPopup, handleClosePopup }) {
                 const nombreUsuario = usuarioAsignado
                   ? usuarioAsignado.name
                   : "Sin asignar"
+
+                const owner = usuarios.find(
+                  (usuario) => usuario._id === proyectoAsociado?.ownerId,
+                )
+
                 return (
                   <tr key={task._id} className="transition hover:bg-gray-50">
                     <td className="px-3 py-3 text-sm font-medium text-gray-800 sm:px-6 sm:py-4">
@@ -117,6 +126,14 @@ export default function TaskAdmin({ handleOpenPopup, handleClosePopup }) {
                     </td>
 
                     <td className="px-3 py-3 text-sm font-medium text-gray-800 sm:px-6 sm:py-4">
+                      {nombreProyecto}
+                    </td>
+
+                    <td className="px-3 py-3 text-sm text-gray-600 sm:px-6 sm:py-4">
+                      {owner?.name || "Sin asignar"}
+                    </td>
+
+                    <td className="px-3 py-3 text-sm font-medium text-gray-800 sm:px-6 sm:py-4">
                       {task.title}
                     </td>
 
@@ -124,11 +141,15 @@ export default function TaskAdmin({ handleOpenPopup, handleClosePopup }) {
                       {task.status}
                     </td>
 
-                    <td className="px-3 py-3 text-sm text-gray-600 sm:px-6 sm:py-4">
+                    <td className="flex gap-3 items-center px-3 py-3 text-sm text-gray-600 sm:px-6 sm:py-4">
+                      {task.prioridad === "alta" ? (
+                        <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+                      ) : task.prioridad === "media" ? (
+                        <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
+                      ) : (
+                        <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                      )}
                       {task.prioridad}
-                    </td>
-                    <td className="px-3 py-3 text-sm font-medium text-gray-800 sm:px-6 sm:py-4">
-                      {nombreProyecto}
                     </td>
 
                     <td className="px-3 py-3 text-sm font-medium text-gray-800 sm:px-6 sm:py-4">

@@ -1,9 +1,14 @@
-import logo from "../../images/logo-horizontal-v.png"
+import { usePopup } from "../../hooks/usePopup"
 import { Link, useLocation } from "react-router"
+
 import NarBar from "./NarBar"
+import Popup from "../Popup/Popup"
+
+import logo from "../../images/logo-horizontal-v.png"
 
 export default function Header({ userRole, isLoggedIn, onLogout }) {
   const location = useLocation()
+  const { popup, handleOpenPopup, handleClosePopup } = usePopup()
 
   return (
     <header className="flex items-center justify-between px-10 py-4 bg-[#02216B]">
@@ -32,7 +37,17 @@ export default function Header({ userRole, isLoggedIn, onLogout }) {
       )}
 
       {isLoggedIn && userRole === "colaborador" && (
-        <NarBar onLogout={onLogout}/>
+        <NarBar
+          onLogout={onLogout}
+          handleOpenPopup={handleOpenPopup}
+          handleClosePopup={handleClosePopup}
+        />
+      )}
+
+      {popup && (
+        <Popup onClose={handleClosePopup} title={popup.title}>
+          {popup.children}
+        </Popup>
       )}
     </header>
   )

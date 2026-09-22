@@ -9,9 +9,7 @@ import {
 
 export default function TaskCircule({ tasks }) {
   const pending = tasks.filter((task) => task.status === "pending").length
-
   const progress = tasks.filter((task) => task.status === "progress").length
-
   const completed = tasks.filter((task) => task.status === "completed").length
 
   const data = [

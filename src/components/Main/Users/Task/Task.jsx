@@ -1,7 +1,7 @@
 import { useContext } from "react"
 
 import CurrentUserContext from "../../../../contexts/CurrentUserContext"
-import EditTaks from "../../../Popup/form/EditTak/EditTak"
+import EditTakUser from "../../../Popup/form/EditTak/EditTakUser"
 
 import editar from "../../../../images/editar.png"
 import borrar from "../../../../images/borrar.png"
@@ -16,13 +16,21 @@ export default function Task({
   handleUpdateTask,
   onCardDelete,
 }) {
-  const { usuarios, userEmail } = useContext(CurrentUserContext)
+  const { usuarios, userEmail, projects } = useContext(CurrentUserContext)
 
   const currentUser = usuarios.find((user) => user.email === userEmail)
+
+  const proyecto = projects?.find((project) => project._id === id)
 
   const isAssignedToMe =
     task.assignedTo?._id === currentUser?._id ||
     task.assignedTo === currentUser?._id
+
+  const isOwner =
+    proyecto?.ownerId?._id === currentUser?._id ||
+    proyecto?.ownerId === currentUser?._id
+
+  const canEditTask = isAssignedToMe || isOwner
 
   const assignedUser =
     typeof task.assignedTo === "object"
@@ -32,7 +40,7 @@ export default function Task({
   const editTaskPopup = {
     title: "Editar tarea",
     children: (
-      <EditTaks
+      <EditTakUser
         task={task}
         handleClosePopup={handleClosePopup}
         proyectoAsociado={id}
@@ -61,7 +69,7 @@ export default function Task({
             <p>Asignado a: {assignedUser?.name || "Sin asignar"}</p>
           </div>
           <div className="rounded-lg text-right">
-            {isAssignedToMe && (
+            {canEditTask && (
               <img
                 src={editar}
                 alt="Imagen superior"

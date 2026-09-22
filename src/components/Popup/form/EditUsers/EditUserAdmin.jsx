@@ -1,55 +1,54 @@
 import { useContext, useState } from "react"
 import guardar from "../../../../images/guardar-el-archivo.png"
-import CurrentUserContext from "../../../../contexts/CurrentUserContext";
+import CurrentUserContext from "../../../../contexts/CurrentUserContext"
 
-export default function EditUsersAdmin({user,  handleClosePopup}) {
+export default function EditUsersAdmin({ user, handleClosePopup }) {
+  const { handleUpdateUseraAdmin, projects, tasks } =
+    useContext(CurrentUserContext)
 
-    const {handleUpdateUseraAdmin, projects} = useContext(CurrentUserContext)
   const [systemRol, setRol] = useState(user.systemRol)
-
   const [rolError, setRolError] = useState("")
 
-
+  //Varificar si tiene proyectos o tareas
   const haveProject = projects.some((project) => {
-  const isOwner =
-    project.ownerId?.toString() === user._id.toString()
-
-  const isAssigned = project.assignedTo?.some(
-    (userId) => userId.toString() === user._id.toString()
-  )
-
-  return isOwner || isAssigned
-})
-
-const handleRolChange = (event) => {
-  const value = event.target.value
-
-  setRol(value)
-  setRolError("")
-}
-
-
-const handleSubmit = (event) => {
-  event.preventDefault()
-
-  if (haveProject) {
-    setRolError(
-      "Este usuario no puede ser administrador porque tiene proyectos asignados o propios."
+    const isOwner = project.ownerId?.toString() === user._id?.toString()
+    const isAssigned = project.assignedTo?.some(
+      (userId) => userId.toString() === user._id?.toString(),
     )
-    return
+    const isAssignedTask = tasks.some(
+      (task) =>
+        task.idProject?.toString() === project._id?.toString() &&
+        task.assignedTo?.toString() === user._id?.toString(),
+    )
+
+    return isOwner || isAssigned || isAssignedTask
+  })
+
+  const handleRolChange = (event) => {
+    const value = event.target.value
+
+    setRol(value)
+    setRolError("")
   }
 
-  const data = {
-    id: user._id,
-    systemRol,
+  const handleSubmit = (event) => {
+    event.preventDefault()
+
+    if (haveProject) {
+      setRolError(
+        "Este usuario no puede cambiar de rol porque tiene proyectos asignados o propios, tiene que terminar sus actividades para poder cambiar",
+      )
+      return
+    }
+
+    const data = {
+      id: user._id,
+      systemRol,
+    }
+
+    handleUpdateUseraAdmin(data)
+    handleClosePopup()
   }
-
-  handleUpdateUseraAdmin(data)
-  handleClosePopup()
-}
-
-
-
 
   return (
     <form
@@ -67,7 +66,6 @@ const handleSubmit = (event) => {
         <p> {user.email} </p>
       </label>
 
-
       <label className="popup__label">
         <select
           value={systemRol}
@@ -75,11 +73,13 @@ const handleSubmit = (event) => {
           required
           className="w-full rounded-lg border border-gray-600 bg-gray-800 px-4 py-3 text-sm text-white"
         >
+          <option value="admin" disabled={haveProject}>
+            Administrador
+          </option>
 
-          <option value="admin" disabled={haveProject}>Administrador</option>
-
-          <option value="colaborador">Colaborador</option>
-
+          <option value="colaborador" disabled={haveProject}>
+            Colaborador
+          </option>
         </select>
 
         <span className="min-h-5 text-sm text-red-500">{rolError}</span>

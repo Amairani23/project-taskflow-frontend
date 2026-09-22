@@ -15,7 +15,7 @@ import NewTaskUser from "../../../Popup/form/NewTask/NewTaskUser"
 import api from "../../../../utils/api"
 
 export default function Project() {
-  const { projects, usuarios, userEmail } = useContext(CurrentUserContext)
+  const { projects, usuarios, userEmail, user } = useContext(CurrentUserContext)
   const { id } = useParams()
   const { popup, handleOpenPopup, handleClosePopup } = usePopup()
   const [tasksState, setTasksState] = useState([])
@@ -116,7 +116,7 @@ export default function Project() {
                   Descripción: {project.descriptionProject}
                 </p>
               </div>
-              {isOwner && (
+              {user === "colaborador" && isOwner && (
                 <button
                   type="button"
                   onClick={() => handleOpenPopup(addTaskPopup)}

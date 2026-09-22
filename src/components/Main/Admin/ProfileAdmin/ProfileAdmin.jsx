@@ -1,22 +1,51 @@
-import editar from "../../../../images/editar.png"
-import borrar from "../../../../images/borrar.png"
+import { useState, useContext } from "react"
 
 import RemoveCard from "../../../Popup/RemoveCard/RemoveCard"
 import CurrentUserContext from "../../../../contexts/CurrentUserContext"
-import { useContext } from "react"
 import EditUsersAdmin from "../../../Popup/form/EditUsers/EditUserAdmin"
 
-export default function ProfileAdmin({ handleOpenPopup, handleClosePopup }) {
-  const { usuarios } = useContext(CurrentUserContext)
+import editar from "../../../../images/editar.png"
+import borrar from "../../../../images/borrar.png"
 
-  function handleDeleteClick() {
-    console.log("Eliminando usuario")
-    // Aquí después puedes recibir el id del usuario
+export default function ProfileAdmin({ handleOpenPopup, handleClosePopup }) {
+  const { usuarios, handleDeleteUser } = useContext(CurrentUserContext)
+  const [usersToDelete, setUsersToDelete] = useState(null)
+
+  async function handleDeleteClick(userId) {
+    console.log("1. ProfileAdmin:", userId)
+
+    const deleted = await handleDeleteUser(userId)
+
+    if (deleted) {
+      setUsersToDelete(null)
+      handleClosePopup()
+    }
   }
 
-  const removePopup = {
-    title: "",
-    children: <RemoveCard onDelete={handleDeleteClick} />,
+  const handleRemoveUser = (user) => {
+    console.log("Usuario seleccionado:", user)
+    console.log("ID seleccionado:", user?._id)
+
+    if (!user?._id) {
+      console.error("Este usuario no tiene _id:", user)
+      return
+    }
+
+    setUsersToDelete(user._id)
+
+    handleOpenPopup({
+      title: "",
+      children: <RemoveCard onDelete={() => handleDeleteClick(user._id)} />,
+    })
+  }
+
+  const handleEditUser = (user) => {
+    handleOpenPopup({
+      title: "Editar usuario",
+      children: (
+        <EditUsersAdmin user={user} handleClosePopup={handleClosePopup} />
+      ),
+    })
   }
 
   return (
@@ -34,6 +63,10 @@ export default function ProfileAdmin({ handleOpenPopup, handleClosePopup }) {
               <tr>
                 <th className="px-3 py-3 text-xs font-semibold sm:px-6 sm:py-4 sm:text-sm">
                   Id
+                </th>
+
+                <th className="px-3 py-3 text-xs font-semibold sm:px-6 sm:py-4 sm:text-sm">
+                  Imagen
                 </th>
 
                 <th className="px-3 py-3 text-xs font-semibold sm:px-6 sm:py-4 sm:text-sm">
@@ -63,6 +96,14 @@ export default function ProfileAdmin({ handleOpenPopup, handleClosePopup }) {
                     </td>
 
                     <td className="px-3 py-3 text-sm font-medium text-gray-800 sm:px-6 sm:py-4">
+                      <img
+                        src={user.avatar}
+                        alt={user.name}
+                        className="h-12 w-12 rounded-full object-cover"
+                      />
+                    </td>
+
+                    <td className="px-3 py-3 text-sm font-medium text-gray-800 sm:px-6 sm:py-4">
                       {user.name}
                     </td>
 
@@ -78,11 +119,7 @@ export default function ProfileAdmin({ handleOpenPopup, handleClosePopup }) {
                       <div className="flex justify-end gap-3">
                         <button
                           type="button"
-                          onClick={() => handleOpenPopup({
-                            title: "Editar usuario",
-                            children: <EditUsersAdmin user={user} handleClosePopup={handleClosePopup} />,
-                          }
-                        )}
+                          onClick={() => handleEditUser(user)}
                         >
                           <img
                             src={editar}
@@ -93,7 +130,7 @@ export default function ProfileAdmin({ handleOpenPopup, handleClosePopup }) {
 
                         <button
                           type="button"
-                          onClick={() => handleOpenPopup(removePopup)}
+                          onClick={() => handleRemoveUser(user)}
                         >
                           <img
                             src={borrar}

@@ -1,20 +1,24 @@
-import agregar from "../../../../images/btn-add-project.png"
-import editar from "../../../../images/editar.png"
-import borrar from "../../../../images/borrar.png"
+import { useState, useContext } from "react"
 
 import NewProject from "../../../Popup/form/NewProject/NewProject"
 import RemoveCard from "../../../Popup/RemoveCard/RemoveCard"
 import EditProject from "../../../Popup/form/EditProject/EditProject"
 import CurrentUserContext from "../../../../contexts/CurrentUserContext"
-import { useState, useContext } from "react"
+
+import agregar from "../../../../images/btn-add-project.png"
+import editar from "../../../../images/editar.png"
+import borrar from "../../../../images/borrar.png"
 
 export default function ProjectsAdmin({ handleOpenPopup, handleClosePopup }) {
-  const { projects, handleDeleteProject } = useContext(CurrentUserContext)
+  const { projects, handleDeleteProject, user, usuarios } =
+    useContext(CurrentUserContext)
   const [projectToDelete, setProjectToDelete] = useState(null)
 
   const addProjectPopup = {
     title: "Nuevo proyecto",
-    children: <NewProject handleClosePopup={handleClosePopup} />,
+    children: (
+      <NewProject handleClosePopup={handleClosePopup} userRole={user} />
+    ),
   }
 
   async function handleDeleteClick(projectId) {
@@ -24,6 +28,23 @@ export default function ProjectsAdmin({ handleOpenPopup, handleClosePopup }) {
       setProjectToDelete(null)
       handleClosePopup()
     }
+  }
+
+  const handleEditProject = (project) =>
+    handleOpenPopup({
+      title: "Editar proyecto",
+      children: (
+        <EditProject project={project} handleClosePopup={handleClosePopup} />
+      ),
+    })
+
+  const handleRemoveProject = (project) => {
+    setProjectToDelete(project._id)
+
+    handleOpenPopup({
+      title: "",
+      children: <RemoveCard onDelete={() => handleDeleteClick(project._id)} />,
+    })
   }
 
   return (
@@ -55,6 +76,10 @@ export default function ProjectsAdmin({ handleOpenPopup, handleClosePopup }) {
                 </th>
 
                 <th className="px-3 py-3 text-xs font-semibold sm:px-6 sm:py-4 sm:text-sm">
+                  Creado por
+                </th>
+
+                <th className="px-3 py-3 text-xs font-semibold sm:px-6 sm:py-4 sm:text-sm">
                   Proyecto
                 </th>
 
@@ -76,6 +101,9 @@ export default function ProjectsAdmin({ handleOpenPopup, handleClosePopup }) {
               {[...projects]
                 .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
                 .map((project, index) => {
+                  const owner = usuarios.find(
+                    (usuario) => usuario._id === project.ownerId,
+                  )
                   return (
                     <tr
                       key={project._id}
@@ -89,6 +117,10 @@ export default function ProjectsAdmin({ handleOpenPopup, handleClosePopup }) {
                         {new Date(project.createdAt).toLocaleDateString(
                           "es-MX",
                         )}
+                      </td>
+
+                      <td className="px-3 py-3 text-sm text-gray-600 sm:px-6 sm:py-4">
+                        {owner?.name || "Sin asignar"}
                       </td>
 
                       <td className="px-3 py-3 text-sm font-medium text-gray-800 sm:px-6 sm:py-4">
@@ -111,17 +143,7 @@ export default function ProjectsAdmin({ handleOpenPopup, handleClosePopup }) {
                         <div className="flex justify-end gap-3">
                           <button
                             type="button"
-                            onClick={() =>
-                              handleOpenPopup({
-                                title: "Editar proyecto",
-                                children: (
-                                  <EditProject
-                                    project={project}
-                                    handleClosePopup={handleClosePopup}
-                                  />
-                                ),
-                              })
-                            }
+                            onClick={() => handleEditProject(project)}
                           >
                             <img
                               src={editar}
@@ -132,20 +154,7 @@ export default function ProjectsAdmin({ handleOpenPopup, handleClosePopup }) {
 
                           <button
                             type="button"
-                            onClick={() => {
-                              setProjectToDelete(project._id)
-
-                              handleOpenPopup({
-                                title: "",
-                                children: (
-                                  <RemoveCard
-                                    onDelete={() =>
-                                      handleDeleteClick(project._id)
-                                    }
-                                  />
-                                ),
-                              })
-                            }}
+                            onClick={() => handleRemoveProject(project)}
                           >
                             <img
                               src={borrar}

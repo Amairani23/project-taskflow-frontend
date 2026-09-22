@@ -3,7 +3,7 @@ import guardar from "../../../../images/guardar-el-archivo.png"
 import cerrar from "../../../../images/cerrar-simbolo-de-boton-circular-blanco.png"
 import CurrentUserContext from "../../../../contexts/CurrentUserContext"
 
-export default function EditTak({
+export default function EditTakUser({
   task,
   handleClosePopup,
   proyectoAsociado,
@@ -114,6 +114,7 @@ export default function EditTak({
     }
     try {
       await handleUpdateTask(data)
+      onTaskUpdated()
       handleClosePopup()
     } catch (error) {
       console.error("Error actualizando tarea:", error)

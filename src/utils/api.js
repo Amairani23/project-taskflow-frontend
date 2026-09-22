@@ -31,19 +31,34 @@ class Api {
       method: "PATCH",
       headers: this._getHeaders(),
       body: JSON.stringify({
-        systemRol: userData.systemRol ,
+        systemRol: userData.systemRol,
       }),
-      
     }).then(async (res) => {
-    const data = await res.json()
+      const data = await res.json()
 
-    if (!res.ok) {
-      throw new Error(data.message || `Error: ${res.status}`)
-    }
+      if (!res.ok) {
+        throw new Error(data.message || `Error: ${res.status}`)
+      }
 
-    return data
-  })
-}
+      return data
+    })
+  }
+
+  // Eliminar proyecto
+  deleteUser(userId) {
+    console.log("3. API:", userId)
+    return fetch(`${this.baseUrl}/users/${userId}`, {
+      method: "DELETE",
+      headers: this._getHeaders(),
+    }).then(async (res) => {
+      const data = await res.json()
+      if (!res.ok) {
+        throw new Error(data.message || `Error: ${res.status}`)
+      }
+
+      return data
+    })
+  }
 
   // Edita información del usuario
   updateUserInfo(userData) {
@@ -51,25 +66,8 @@ class Api {
       method: "PATCH",
       headers: this._getHeaders(),
       body: JSON.stringify({
-        avatar: userData.avatar,
         name: userData.name,
-        email: userData.email,
-      }),
-    }).then((res) => {
-      if (res.ok) {
-        return res.json()
-      }
-      return Promise.reject(`Error: ${res.status}`)
-    })
-  }
-
-  // Editar foto de perfil
-  updateAvatar(avatarData) {
-    return fetch(`${this.baseUrl}/users/me/avatar`, {
-      method: "PATCH",
-      headers: this._getHeaders(),
-      body: JSON.stringify({
-        avatar: avatarData.avatar,
+        avatar: userData.avatar,
       }),
     }).then((res) => {
       if (res.ok) {

@@ -1,6 +1,7 @@
-import logo from "../../images/logo-blanco.png"
 import { Link } from "react-router-dom"
 import { useState } from "react"
+
+import logo from "../../images/logo-blanco.png"
 
 export default function Login({ handleLogin }) {
   const [data, setData] = useState({
@@ -18,6 +19,7 @@ export default function Login({ handleLogin }) {
 
   const handleSubmit = (e) => {
     e.preventDefault()
+
     handleLogin({
       email: data.email,
       password: data.password,

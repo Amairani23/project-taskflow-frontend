@@ -16,9 +16,13 @@ import Project from "../Main/Users/Project/Project"
 import CurrentUserContext from "../../contexts/CurrentUserContext"
 import Popup from "../Popup/Popup"
 import api from "../../utils/api"
+import InfoLoading from "../Popup/InfoTooltip/InfoLoading"
 
 function App() {
   const { popup, handleOpenPopup, handleClosePopup } = usePopup()
+
+  //carga
+  const [isLoading, setIsLoading] = useState(false)
 
   //login
   const { user, userEmail, isLoggedIn, handleLogin, handleLogout } = useLogin(
@@ -32,11 +36,6 @@ function App() {
     handleClosePopup,
   })
 
-  //carga
-  const [isLoading, setIsLoading] = useState(false)
-
-  const louding = isLoading ? "Guardando..." : "Guardar"
-
   const [usuarios, setUsuarios] = useState([])
   const [projects, setProjects] = useState([])
   const [tasks, setTasks] = useState([])
@@ -44,46 +43,30 @@ function App() {
   const userInfo = usuarios.find((usuario) => usuario.email === userEmail)
 
   useEffect(() => {
-    if (!isLoggedIn) return
+    if (!isLoggedIn || !user) return
 
-    api
-      .getUsers()
-      .then((data) => {
-        setUsuarios(data)
-      })
-      .catch((error) => {
-        console.error("ERROR:", error)
-      })
+    const loadInitialData = async () => {
+      setIsLoading(true)
 
-    api
-      .getInitialProject()
-      .then((data) => {
-        setProjects(data)
-      })
-      .catch((error) => {
-        console.error("ERROR:", error)
-      })
+      try {
+        const [usersData, projectsData, tasksData] = await Promise.all([
+          api.getUsers(),
+          api.getInitialProject(),
+          user === "admin" ? api.getInitialTaskAdmin() : Promise.resolve([]),
+        ])
 
-    if (user === "admin") {
-      api
-        .getInitialTaskAdmin()
-        .then((data) => {
-          setTasks(data)
-        })
-        .catch((error) => {
-          console.error("Error tareas admin:", error)
-        })
+        setUsuarios(usersData)
+        setProjects(projectsData)
+        setTasks(tasksData)
+      } catch (error) {
+        console.error("Error cargando datos iniciales:", error)
+      } finally {
+        setIsLoading(false)
+      }
     }
-  }, [isLoggedIn])
 
-  const loadTasks = async () => {
-    try {
-      const data = await api.getInitialTaskAdmin()
-      setTasks(data)
-    } catch (error) {
-      console.error("Error cargando tareas:", error)
-    }
-  }
+    loadInitialData()
+  }, [isLoggedIn, user])
 
   // Agregar proyectos
   const handleAddProjectsSubmit = async (data) => {
@@ -124,6 +107,16 @@ function App() {
     }
   }
 
+  //Recargar proyectos
+  const reloadProjects = async () => {
+    try {
+      const data = await api.getInitialProject()
+      setProjects(data)
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
   //Editar tarea
   const handleUpdateTask = async (data) => {
     try {
@@ -157,15 +150,6 @@ function App() {
     }
   }
 
-  const reloadProjects = async () => {
-    try {
-      const data = await api.getInitialProject()
-      setProjects(data)
-    } catch (error) {
-      console.error(error)
-    }
-  }
-
   //Agregar tarea
   const handleCreateTask = async (data) => {
     try {
@@ -195,48 +179,65 @@ function App() {
     }
   }
 
-  //Editar Rol del usuario
- const handleUpdateUseraAdmin = async (data) => {
-  try {
-    const newData = await api.updateUserAdmin(data, data.id)
-
-    setUsuarios((usuarios) =>
-      usuarios.map((usuario) =>
-        usuario._id === newData._id ? newData : usuario
-      )
-    )
-
-    handleClosePopup()
-  } catch (error) {
-    console.error(error)
+  //Recarga tareas
+  const loadTasks = async () => {
+    try {
+      const data = await api.getInitialTaskAdmin()
+      setTasks(data)
+    } catch (error) {
+      console.error("Error cargando tareas:", error)
+    }
   }
-}
 
+  //Editar Rol del usuario
+  const handleUpdateUseraAdmin = async (data) => {
+    try {
+      const newData = await api.updateUserAdmin(data, data.id)
 
+      setUsuarios((usuarios) =>
+        usuarios.map((usuario) =>
+          usuario._id === newData._id ? newData : usuario,
+        ),
+      )
 
-  const handleUpdateUser = (data) => {
-    (async () => {
-      await api
-        .updateUserInfo(data)
-        .then((newData) => {
-          setUsuarios(newData);
-          handleClosePopup();
-        })
-        .catch((error) => console.error(error));
-    })();
-  };
+      handleClosePopup()
+    } catch (error) {
+      console.error(error)
+    }
+  }
 
-  const handleUpdateAvatar = (data) => {
-    (async () => {
-      await api
-        .updateAvatar(data)
-        .then((newData) => {
-          setUsuarios(newData);
-          handleClosePopup();
-        })
-        .catch((error) => console.error(error));
-    })();
-  };
+  //Editar usuario
+  const handleUpdateUser = async (data) => {
+    try {
+      const updatedUser = await api.updateUserInfo(data)
+
+      setUsuarios((prevUsuarios) =>
+        prevUsuarios.map((usuario) =>
+          usuario._id === updatedUser._id ? updatedUser : usuario,
+        ),
+      )
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  // Eliminar usuario
+  const handleDeleteUser = async (userId) => {
+    console.log("2. App:", userId.id)
+
+    try {
+      await api.deleteUser(userId.id)
+
+      setUsuarios((currentUsers) =>
+        currentUsers.filter((user) => user._id !== userId),
+      )
+
+      return true
+    } catch (error) {
+      console.error(error)
+      return false
+    }
+  }
 
   return (
     <>
@@ -248,8 +249,9 @@ function App() {
           user,
           userEmail,
           userInfo,
+          isLoading,
           handleUpdateUser,
-          handleUpdateAvatar,
+          handleDeleteUser,
           handleUpdateUseraAdmin,
           handleAddProjectsSubmit,
           handleUpdateProject,
@@ -259,60 +261,70 @@ function App() {
           handleDeleteTask,
           reloadProjects,
           loadTasks,
+          setIsLoading,
         }}
       >
-        <Header
-          userRole={user}
-          isLoggedIn={isLoggedIn}
-          onLogout={handleLogout}
-        />
-        <Routes>
-          <Route path="/signin" element={<Login handleLogin={handleLogin} />} />
+        {isLoading ? (
+          <InfoLoading />
+        ) : (
+          <>
+            <Header
+              userRole={user}
+              isLoggedIn={isLoggedIn}
+              onLogout={handleLogout}
+            />
+            <Routes>
+              <Route
+                path="/signin"
+                element={<Login handleLogin={handleLogin} />}
+              />
 
-          <Route
-            path="/signup"
-            element={<Register handleRegistration={handleRegistration} />}
-          />
+              <Route
+                path="/signup"
+                element={<Register handleRegistration={handleRegistration} />}
+              />
 
-          <Route
-            path="/admin"
-            element={
-              <AdminRoute isLoggedIn={isLoggedIn}>
-                <MainAdmin onLogout={handleLogout} />
-              </AdminRoute>
-            }
-          />
+              <Route
+                path="/admin"
+                element={
+                  <AdminRoute isLoggedIn={isLoggedIn}>
+                    <MainAdmin onLogout={handleLogout} />
+                  </AdminRoute>
+                }
+              />
 
-          <Route
-            path="/dashboard"
-            element={
-              <UsersRoute isLoggedIn={isLoggedIn}>
-                <MainUsers />
-              </UsersRoute>
-            }
-          />
+              <Route
+                path="/dashboard"
+                element={
+                  <UsersRoute isLoggedIn={isLoggedIn}>
+                    <MainUsers userRole={user} />
+                  </UsersRoute>
+                }
+              />
 
-          <Route
-            path="/project/:id"
-            element={
-              <UsersRoute isLoggedIn={isLoggedIn}>
-                <Project />
-              </UsersRoute>
-            }
-          />
+              <Route
+                path="/project/:id"
+                element={
+                  <UsersRoute isLoggedIn={isLoggedIn}>
+                    <Project />
+                  </UsersRoute>
+                }
+              />
 
-          <Route
-            path="*"
-            element={
-              isLoggedIn ? (
-                <Navigate to="/" replace />
-              ) : (
-                <Navigate to="/signin" replace />
-              )
-            }
-          />
-        </Routes>
-        <Footer />
+              <Route
+                path="*"
+                element={
+                  isLoggedIn ? (
+                    <Navigate to="/" replace />
+                  ) : (
+                    <Navigate to="/signin" replace />
+                  )
+                }
+              />
+            </Routes>
+            <Footer />
+          </>
+        )}
         {popup && (
           <Popup onClose={handleClosePopup} title={popup.title}>
             {popup.children}

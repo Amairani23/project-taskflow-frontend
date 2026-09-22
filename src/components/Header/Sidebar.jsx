@@ -1,11 +1,22 @@
 import { useContext, useState } from "react"
-import logo from "../../images/logo-horizontal-v.png"
+
 import CurrentUserContext from "../../contexts/CurrentUserContext"
 import EditUsers from "../Popup/form/EditUsers/EditUsers"
 
-export default function Sidebar({ setSection, onLogout, handleOpenPopup, handleClosePopup }) {
+import logo from "../../images/logo-horizontal-v.png"
+
+export default function Sidebar({
+  setSection,
+  onLogout,
+  handleOpenPopup,
+  handleClosePopup,
+}) {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const {userInfo} = useContext(CurrentUserContext)
+  const { userInfo } = useContext(CurrentUserContext)
+
+  if (!userInfo) {
+    return null
+  }
 
   const handleSection = (section) => {
     setSection(section)
@@ -13,9 +24,9 @@ export default function Sidebar({ setSection, onLogout, handleOpenPopup, handleC
   }
 
   const editUserInfo = {
-      title: "Editar perfil",
-      children: <EditUsers user={userInfo} handleClosePopup={handleClosePopup} />,
-    }
+    title: "Editar perfil",
+    children: <EditUsers user={userInfo} handleClosePopup={handleClosePopup} />,
+  }
 
   return (
     <>
@@ -85,11 +96,10 @@ export default function Sidebar({ setSection, onLogout, handleOpenPopup, handleC
               className="h-12 w-12 rounded-full border-2 border-gray-600 object-cover"
             />
 
-            {/* Overlay solo sobre la imagen */}
             <div className="absolute inset-0 flex items-center justify-center rounded-full bg-black/60 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
               <button
                 type="button"
-                className="text-white"
+                className="text-white rotate-[100deg]"
                 aria-label="Editar perfil"
                 onClick={() => handleOpenPopup(editUserInfo)}
               >
@@ -103,12 +113,9 @@ export default function Sidebar({ setSection, onLogout, handleOpenPopup, handleC
               {userInfo.name}
             </span>
 
-            <span className="text-xs text-gray-400">
-              {userInfo.email}
-            </span>
+            <span className="text-xs text-gray-400">{userInfo.email}</span>
           </div>
         </div>
-
 
         <div className="flex flex-col gap-3">
           <button

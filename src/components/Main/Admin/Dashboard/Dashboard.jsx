@@ -1,16 +1,11 @@
 import { useContext } from "react"
+
 import CurrentUserContext from "../../../../contexts/CurrentUserContext"
-import NewProject from "../../../Popup/form/NewProject/NewProject"
 import TaskChart from "../Graphs/TaskChart/TaskChart"
 import TaskCircule from "../Graphs/TaskChart/TaskCircule"
 
 export default function Dashboard() {
   const { usuarios, projects, tasks } = useContext(CurrentUserContext)
-
-  const addProjectPopup = {
-    title: "Nuevo proyecto",
-    children: <NewProject />,
-  }
 
   const totalCompleted = tasks.reduce((acc, project) => {
     if (project.status === "completed") {
