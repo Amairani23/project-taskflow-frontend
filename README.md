@@ -4,6 +4,12 @@ TaskFlow es una aplicación web para la gestión de proyectos y tareas, diseñad
 
 La aplicación cuenta con diferentes niveles de acceso según el rol del usuario. Los administradores pueden gestionar y visualizar información general de los proyectos, tareas y usuarios, mientras que los usuarios pueden consultar los proyectos que tienen asignados y las tareas pendientes correspondientes.
 
+Sitio web: https://inariama.taskflow.mooo.com/
+
+Nota:
+Correo de ejemplo, como colaborador: test@example.com
+Contraseña: test
+
 ## Características principales
 
 ### Administrador

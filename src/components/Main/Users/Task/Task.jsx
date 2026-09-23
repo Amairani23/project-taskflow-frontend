@@ -65,7 +65,7 @@ export default function Task({
           {/* tareas */}
           <div className="col-span-4 rounded-lg text-left mb-3">
             <h3 className="font-semibold">Tarea: {task.title}</h3>
-            <p>Asignado a: {assignedUser?.name || "Sin asignar"}</p>
+            <p>Asignado a: {assignedUser?.name || "Propio"}</p>
           </div>
           <div className="rounded-lg text-right">
             {canEditTask && (
