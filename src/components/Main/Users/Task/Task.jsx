@@ -2,10 +2,10 @@ import { useContext } from "react"
 
 import CurrentUserContext from "../../../../contexts/CurrentUserContext"
 import EditTakUser from "../../../Popup/form/EditTak/EditTakUser"
-
-import editar from "../../../../images/editar.png"
-import borrar from "../../../../images/borrar.png"
 import RemoveCard from "../../../Popup/RemoveCard/RemoveCard"
+
+import editar from "../../../../images/editar.svg"
+import borrar from "../../../../images/borrar.svg"
 
 export default function Task({
   task,
@@ -19,7 +19,6 @@ export default function Task({
   const { usuarios, userEmail, projects } = useContext(CurrentUserContext)
 
   const currentUser = usuarios.find((user) => user.email === userEmail)
-
   const proyecto = projects?.find((project) => project._id === id)
 
   const isAssignedToMe =

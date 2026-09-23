@@ -1,22 +1,21 @@
 import { useNavigate } from "react-router"
 import { useContext } from "react"
 
-import borrar from "../../../../images/borrar.png"
-import abrir from "../../../../images/abrir-doc.png"
-
 import RemoveCard from "../../../Popup/RemoveCard/RemoveCard"
 import CurrentUserContext from "../../../../contexts/CurrentUserContext"
 
+import borrar from "../../../../images/borrar.svg"
+import abrir from "../../../../images/abrir-doc.svg"
+
 export default function Card({ card, onOpenPopup, onCardDelete }) {
-  const navigate = useNavigate()
   const { usuarios, userEmail } = useContext(CurrentUserContext)
+  const navigate = useNavigate()
 
   const handleClick = () => {
     navigate(`/project/${card._id}`)
   }
 
   const currentUser = usuarios.find((usuario) => usuario.email === userEmail)
-
   const isOwner = currentUser._id == card.ownerId
 
   const removePopup = {

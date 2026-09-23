@@ -1,5 +1,5 @@
-import successImage from "../../../images/success.png"
-import errorImage from "../../../images/error.png"
+import successImage from "../../../images/success.svg"
+import errorImage from "../../../images/error.svg"
 
 export default function InfoTooltip({ isSuccess }) {
   return (

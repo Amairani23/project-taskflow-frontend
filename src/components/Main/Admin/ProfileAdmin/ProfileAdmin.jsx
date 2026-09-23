@@ -4,17 +4,16 @@ import RemoveCard from "../../../Popup/RemoveCard/RemoveCard"
 import CurrentUserContext from "../../../../contexts/CurrentUserContext"
 import EditUsersAdmin from "../../../Popup/form/EditUsers/EditUserAdmin"
 
-import editar from "../../../../images/editar.png"
-import borrar from "../../../../images/borrar.png"
+import editar from "../../../../images/editar.svg"
+import borrar from "../../../../images/borrar.svg"
 
 export default function ProfileAdmin({ handleOpenPopup, handleClosePopup }) {
-  const { usuarios, handleDeleteUser } = useContext(CurrentUserContext)
+  const { usuarios, handleUserDelete } = useContext(CurrentUserContext)
   const [usersToDelete, setUsersToDelete] = useState(null)
 
   async function handleDeleteClick(userId) {
-    console.log("1. ProfileAdmin:", userId)
 
-    const deleted = await handleDeleteUser(userId)
+    const deleted = await handleUserDelete(userId)
 
     if (deleted) {
       setUsersToDelete(null)
@@ -23,8 +22,6 @@ export default function ProfileAdmin({ handleOpenPopup, handleClosePopup }) {
   }
 
   const handleRemoveUser = (user) => {
-    console.log("Usuario seleccionado:", user)
-    console.log("ID seleccionado:", user?._id)
 
     if (!user?._id) {
       console.error("Este usuario no tiene _id:", user)

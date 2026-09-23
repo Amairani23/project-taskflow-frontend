@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
-import logo from "../../images/logo-blanco.png";
+
+import logo from "../../images/logo-blanco.svg";
 
 export default function Register({ handleRegistration }) {
 

@@ -3,7 +3,7 @@ import { useContext, useState } from "react"
 import CurrentUserContext from "../../contexts/CurrentUserContext"
 import EditUsers from "../Popup/form/EditUsers/EditUsers"
 
-import logo from "../../images/logo-horizontal-v.png"
+import logo from "../../images/logo-horizontal-v.svg"
 
 export default function Sidebar({
   setSection,

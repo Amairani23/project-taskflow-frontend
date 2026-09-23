@@ -1,7 +1,8 @@
 import { useContext, useState } from "react"
-import guardar from "../../../../images/guardar-el-archivo.png"
-import borrar from "../../../../images/borrar.png"
+
 import CurrentUserContext from "../../../../contexts/CurrentUserContext"
+
+import guardar from "../../../../images/guardar-el-archivo.svg"
 
 export default function EditUsers({ user, handleClosePopup }) {
   const { handleUpdateUser } = useContext(CurrentUserContext)
@@ -30,7 +31,7 @@ export default function EditUsers({ user, handleClosePopup }) {
       setNameError("")
     }
 
-    setName(event.target.value) // Actualiza name cuando cambie la entrada
+    setName(event.target.value) 
   }
 
   const handleSubmit = async (event) => {
@@ -80,8 +81,8 @@ export default function EditUsers({ user, handleClosePopup }) {
           placeholder="Title"
           required
           type="text"
-          value={name} // Vincula description con la entrada
-          onChange={handleNameChange} // Agrega el controlador onChange
+          value={name} 
+          onChange={handleNameChange} 
         />
         <span className="min-h-5 text-sm text-red-500" id="owner-title-error">
           {nameError}

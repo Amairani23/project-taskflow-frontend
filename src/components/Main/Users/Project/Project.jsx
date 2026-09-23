@@ -3,22 +3,23 @@ import { useNavigate } from "react-router"
 import { usePopup } from "../../../../hooks/usePopup"
 import { useContext, useEffect, useState } from "react"
 
-import reloj from "../../../../images/reloj-blanco.png"
-import progress from "../../../../images/proseso-blanco.png"
-import cheque from "../../../../images/cheque-blanco.png"
-import agregar from "../../../../images/btn-add-project.png"
-
 import Task from "../Task/Task"
 import Popup from "../../../Popup/Popup"
 import CurrentUserContext from "../../../../contexts/CurrentUserContext"
 import NewTaskUser from "../../../Popup/form/NewTask/NewTaskUser"
 import api from "../../../../utils/api"
 
+import reloj from "../../../../images/reloj-blanco.svg"
+import progress from "../../../../images/proseso-blanco.svg"
+import cheque from "../../../../images/cheque-blanco.svg"
+import agregar from "../../../../images/btn-add-project.svg"
+
 export default function Project() {
   const { projects, usuarios, userEmail, user } = useContext(CurrentUserContext)
   const { id } = useParams()
   const { popup, handleOpenPopup, handleClosePopup } = usePopup()
   const [tasksState, setTasksState] = useState([])
+  const navigate = useNavigate()
 
   const project = projects.find((project) => project._id === id)
 
@@ -63,18 +64,13 @@ export default function Project() {
   }, [id])
 
   const projectTasks = tasksState
-
   const pendingTasks = projectTasks.filter((task) => task.status === "pending")
-
   const progressTasks = projectTasks.filter(
     (task) => task.status === "progress",
   )
-
   const completedTasks = projectTasks.filter(
     (task) => task.status === "completed",
   )
-
-  const navigate = useNavigate()
 
   const addTaskPopup = {
     title: "Nueva tarea",

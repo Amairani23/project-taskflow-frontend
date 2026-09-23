@@ -1,8 +1,9 @@
 import { useContext, useState } from "react"
-import guardar from "../../../../images/guardar-el-archivo.png"
+
 import CurrentUserContext from "../../../../contexts/CurrentUserContext"
 
-import cerrar from "../../../../images/cerrar-simbolo-de-boton-circular-blanco.png"
+import guardar from "../../../../images/guardar-el-archivo.svg"
+import cerrar from "../../../../images/cerrar-simbolo-de-boton-circular-blanco.svg"
 
 export default function NewProject({ handleClosePopup, userRole }) {
   const { usuarios, handleAddProjectsSubmit } = useContext(CurrentUserContext)
@@ -47,6 +48,28 @@ export default function NewProject({ handleClosePopup, userRole }) {
 
     handleAddProjectsSubmit(data)
     handleClosePopup()
+  }
+
+  const handlerAssigned = (user) => {
+      setAssignedTo((current) =>
+          current.filter((id) => id._id !== user._id),
+      )
+    }
+
+  const handleAssignUser = (event) => {
+    const selectedUser = usuarios.find(
+            (user) => user._id === event.target.value,
+          )
+
+    if (!selectedUser) return
+
+    setAssignedTo((current) => {
+      if (current.some((user) => user._id === selectedUser._id)) {
+        return current
+      }
+
+    return [...current, selectedUser]
+    })
   }
 
   return (
@@ -100,11 +123,7 @@ export default function NewProject({ handleClosePopup, userRole }) {
               <button
                 className="flex h-8 w-8 items-center justify-center rounded-full  transition hover:bg-red-600"
                 type="button"
-                onClick={() => {
-                  setAssignedTo((current) =>
-                    current.filter((id) => id._id !== user._id),
-                  )
-                }}
+                onClick={() => handlerAssigned(user)}
               >
                 <img src={cerrar} alt="Eliminar usuario" className="w-4" />
               </button>
@@ -115,21 +134,7 @@ export default function NewProject({ handleClosePopup, userRole }) {
 
       <select
         value=""
-        onChange={(event) => {
-          const selectedUser = usuarios.find(
-            (user) => user._id === event.target.value,
-          )
-
-          if (!selectedUser) return
-
-          setAssignedTo((current) => {
-            if (current.some((user) => user._id === selectedUser._id)) {
-              return current
-            }
-
-            return [...current, selectedUser]
-          })
-        }}
+        onChange={handleAssignUser}
         className="w-full cursor-pointer rounded-lg border border-gray-600 bg-gray-800 px-4 py-3 text-sm text-white outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/30"
       >
         <option value="" disabled className="bg-gray-800 text-gray-400">

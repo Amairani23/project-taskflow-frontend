@@ -1,12 +1,12 @@
-import agregar from "../../../images/btn-add-project.png"
-
-import Card from "./Cards/Card"
-
-import Popup from "../../Popup/Popup"
-import NewProject from "../../Popup/form/NewProject/NewProject"
 import { usePopup } from "../../../hooks/usePopup"
 import { useContext } from "react"
+
+import Card from "./Cards/Card"
+import Popup from "../../Popup/Popup"
+import NewProject from "../../Popup/form/NewProject/NewProject"
 import CurrentUserContext from "../../../contexts/CurrentUserContext"
+
+import agregar from "../../../images/btn-add-project.svg"
 
 export default function MainUsers({ userRole }) {
   const { projects, handleDeleteProject } = useContext(CurrentUserContext)

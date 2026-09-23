@@ -1,13 +1,14 @@
 import { useContext, useState } from "react"
-import guardar from "../../../../images/guardar-el-archivo.png"
-import cerrar from "../../../../images/cerrar-simbolo-de-boton-circular-blanco.png"
+
 import CurrentUserContext from "../../../../contexts/CurrentUserContext"
+
+import guardar from "../../../../images/guardar-el-archivo.svg"
+import cerrar from "../../../../images/cerrar-simbolo-de-boton-circular-blanco.svg"
 
 export default function EditTak({
   task,
   handleClosePopup,
   proyectoAsociado,
-  onTaskUpdated,
 }) {
   const { usuarios, user, handleUpdateTask } = useContext(CurrentUserContext)
 

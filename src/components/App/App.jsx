@@ -222,22 +222,20 @@ function App() {
   }
 
   // Eliminar usuario
-  const handleDeleteUser = async (userId) => {
-    console.log("2. App:", userId.id)
+  async function handleUserDelete(userId) {
+   try {
+   await api.deleteUser(userId);
 
-    try {
-      await api.deleteUser(userId.id)
+  setUsuarios((state) =>
+    state.filter((currentCard) => currentCard._id !== userId)
+  );
 
-      setUsuarios((currentUsers) =>
-        currentUsers.filter((user) => user._id !== userId),
-      )
-
-      return true
-    } catch (error) {
+  handleClosePopup();
+  } catch (error) {
       console.error(error)
-      return false
     }
-  }
+}
+
 
   return (
     <>
@@ -251,7 +249,7 @@ function App() {
           userInfo,
           isLoading,
           handleUpdateUser,
-          handleDeleteUser,
+          handleUserDelete,
           handleUpdateUseraAdmin,
           handleAddProjectsSubmit,
           handleUpdateProject,

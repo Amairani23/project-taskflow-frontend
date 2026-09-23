@@ -1,7 +1,9 @@
 import { useContext, useState } from "react"
-import guardar from "../../../../images/guardar-el-archivo.png"
-import cerrar from "../../../../images/cerrar-simbolo-de-boton-circular-blanco.png"
+
 import CurrentUserContext from "../../../../contexts/CurrentUserContext"
+
+import guardar from "../../../../images/guardar-el-archivo.svg"
+import cerrar from "../../../../images/cerrar-simbolo-de-boton-circular-blanco.svg"
 
 export default function EditTakUser({
   task,
@@ -93,7 +95,6 @@ export default function EditTakUser({
   const handleSubmit = async (event) => {
     event.preventDefault()
 
-    // Obtener el ID correctamente
     let userIdToSend
 
     if (assignedTo) {
@@ -128,7 +129,6 @@ export default function EditTakUser({
       : assignedTo
     : null
 
-  // Buscar información completa del usuario
   const fullAssignedUser = usuarios?.find((user) => user._id === assignedUserId)
 
   return (

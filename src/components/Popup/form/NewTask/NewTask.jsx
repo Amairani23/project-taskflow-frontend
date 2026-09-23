@@ -1,6 +1,8 @@
 import { useContext, useState } from "react"
-import guardar from "../../../../images/guardar-el-archivo.png"
+
 import CurrentUserContext from "../../../../contexts/CurrentUserContext"
+
+import guardar from "../../../../images/guardar-el-archivo.svg"
 
 export default function NewTask({ handleClosePopup }) {
   const { usuarios, projects, handleCreateTask } =

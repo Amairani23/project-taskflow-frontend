@@ -44,7 +44,7 @@ class Api {
     })
   }
 
-  // Eliminar proyecto
+  // Eliminar usuario para admin
   deleteUser(userId) {
     console.log("3. API:", userId)
     return fetch(`${this.baseUrl}/users/${userId}`, {

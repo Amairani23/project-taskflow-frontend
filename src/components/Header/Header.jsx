@@ -4,7 +4,7 @@ import { Link, useLocation } from "react-router"
 import NarBar from "./NarBar"
 import Popup from "../Popup/Popup"
 
-import logo from "../../images/logo-horizontal-v.png"
+import logo from "../../images/logo-horizontal-v.svg"
 
 export default function Header({ userRole, isLoggedIn, onLogout }) {
   const location = useLocation()

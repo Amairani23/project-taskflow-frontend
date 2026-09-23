@@ -1,8 +1,8 @@
 import { useContext, useState } from "react"
 import CurrentUserContext from "../../../../contexts/CurrentUserContext"
 
-import guardar from "../../../../images/guardar-el-archivo.png"
-import cerrar from "../../../../images/cerrar-simbolo-de-boton-circular-blanco.png"
+import guardar from "../../../../images/guardar-el-archivo.svg"
+import cerrar from "../../../../images/cerrar-simbolo-de-boton-circular-blanco.svg"
 
 export default function EditProjects({ project, handleClosePopup }) {
   const { usuarios, handleUpdateProject } = useContext(CurrentUserContext)
@@ -48,6 +48,29 @@ export default function EditProjects({ project, handleClosePopup }) {
     handleClosePopup()
   }
 
+  const handlerAssignedClick = (user) => {
+    setAssignedTo((current) =>
+        current.filter((id) => id._id !== user._id),
+      )
+    }
+
+    const handleAssignUser = (event) => {
+  const selectedUser = usuarios.find(
+    (user) => user._id === event.target.value
+  );
+
+  if (!selectedUser) return;
+
+  setAssignedTo((current) => {
+    if (current.some((user) => user._id === selectedUser._id)) {
+      return current;
+    }
+
+    return [...current, selectedUser];
+  });
+};
+
+
   return (
     <form
       className="flex w-full flex-col gap-5 p-5"
@@ -56,7 +79,7 @@ export default function EditProjects({ project, handleClosePopup }) {
       noValidate
       onSubmit={handleSubmit}
     >
-      <label className="popup__label">
+      <label>
         <input
           className="w-full border-b border-gray-300 bg-transparent px-1 py-3 text-lg text-white outline-none transition placeholder:text-gray-400 focus:border-green-600"
           id="owner-title"
@@ -73,7 +96,7 @@ export default function EditProjects({ project, handleClosePopup }) {
           {titleError}
         </span>
       </label>
-      <label className="popup__label">
+      <label>
         <input
           className="w-full border-b border-gray-300 bg-transparent px-1 py-3 text-lg text-white outline-none transition placeholder:text-gray-400 focus:border-green-600"
           id="owner-description"
@@ -110,11 +133,7 @@ export default function EditProjects({ project, handleClosePopup }) {
               <button
                 className="flex h-8 w-8 items-center justify-center rounded-full  transition hover:bg-red-600"
                 type="button"
-                onClick={() => {
-                  setAssignedTo((current) =>
-                    current.filter((id) => id._id !== user._id),
-                  )
-                }}
+                onClick={() => handlerAssignedClick(user)}
               >
                 <img src={cerrar} alt="Eliminar usuario" className="w-4" />
               </button>
@@ -125,21 +144,7 @@ export default function EditProjects({ project, handleClosePopup }) {
 
       <select
         value=""
-        onChange={(event) => {
-          const selectedUser = usuarios.find(
-            (user) => user._id === event.target.value,
-          )
-
-          if (!selectedUser) return
-
-          setAssignedTo((current) => {
-            if (current.some((user) => user._id === selectedUser._id)) {
-              return current
-            }
-
-            return [...current, selectedUser]
-          })
-        }}
+        onChange={handlerAssignedClick}
         className="w-full cursor-pointer rounded-lg border border-gray-600 bg-gray-800 px-4 py-3 text-sm text-white outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/30"
       >
         <option value="" disabled className="bg-gray-800 text-gray-400">

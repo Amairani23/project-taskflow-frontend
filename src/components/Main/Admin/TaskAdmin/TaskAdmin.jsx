@@ -1,12 +1,13 @@
-import agregar from "../../../../images/btn-add-project.png"
-import editar from "../../../../images/editar.png"
-import borrar from "../../../../images/borrar.png"
+import { useContext, useState } from "react"
 
 import NewTask from "../../../Popup/form/NewTask/NewTask"
 import RemoveCard from "../../../Popup/RemoveCard/RemoveCard"
 import EditTak from "../../../Popup/form/EditTak/EditTak"
 import CurrentUserContext from "../../../../contexts/CurrentUserContext"
-import { useContext, useState } from "react"
+
+import agregar from "../../../../images/btn-add-project.svg"
+import editar from "../../../../images/editar.svg"
+import borrar from "../../../../images/borrar.svg"
 
 export default function TaskAdmin({ handleOpenPopup, handleClosePopup }) {
   const { projects, tasks, usuarios, handleDeleteTask } =
@@ -32,6 +33,31 @@ export default function TaskAdmin({ handleOpenPopup, handleClosePopup }) {
       setTaskToDelete(null)
       handleClosePopup()
     }
+  }
+
+  const handlerEditTask = (task, proyectoAsociado) =>
+    handleOpenPopup({
+      title: "Editar tarea",
+      children: (
+      <EditTak
+        task={task}
+        handleClosePopup={handleClosePopup}
+        proyectoAsociado={proyectoAsociado}
+       />
+     ),
+  })
+
+  const handlerDeleteTask = (task) => {
+    setTaskToDelete(task._id)
+
+    handleOpenPopup({
+      title: "",
+      children: (
+        <RemoveCard
+          onDelete={() => handleDeleteClick(task._id)}
+        />
+      ),
+    })
   }
 
   return (
@@ -160,18 +186,7 @@ export default function TaskAdmin({ handleOpenPopup, handleClosePopup }) {
                       <div className="flex justify-end gap-3">
                         <button
                           type="button"
-                          onClick={() =>
-                            handleOpenPopup({
-                              title: "Editar tarea",
-                              children: (
-                                <EditTak
-                                  task={task}
-                                  handleClosePopup={handleClosePopup}
-                                  proyectoAsociado={proyectoAsociado}
-                                />
-                              ),
-                            })
-                          }
+                          onClick={() => handlerEditTask(task, proyectoAsociado)}
                         >
                           <img
                             src={editar}
@@ -182,18 +197,7 @@ export default function TaskAdmin({ handleOpenPopup, handleClosePopup }) {
 
                         <button
                           type="button"
-                          onClick={() => {
-                            setTaskToDelete(task._id)
-
-                            handleOpenPopup({
-                              title: "",
-                              children: (
-                                <RemoveCard
-                                  onDelete={() => handleDeleteClick(task._id)}
-                                />
-                              ),
-                            })
-                          }}
+                          onClick={() => handlerDeleteTask(task)}
                         >
                           <img
                             src={borrar}

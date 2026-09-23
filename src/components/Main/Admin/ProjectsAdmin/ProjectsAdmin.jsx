@@ -5,9 +5,9 @@ import RemoveCard from "../../../Popup/RemoveCard/RemoveCard"
 import EditProject from "../../../Popup/form/EditProject/EditProject"
 import CurrentUserContext from "../../../../contexts/CurrentUserContext"
 
-import agregar from "../../../../images/btn-add-project.png"
-import editar from "../../../../images/editar.png"
-import borrar from "../../../../images/borrar.png"
+import agregar from "../../../../images/btn-add-project.svg"
+import editar from "../../../../images/editar.svg"
+import borrar from "../../../../images/borrar.svg"
 
 export default function ProjectsAdmin({ handleOpenPopup, handleClosePopup }) {
   const { projects, handleDeleteProject, user, usuarios } =
@@ -46,6 +46,13 @@ export default function ProjectsAdmin({ handleOpenPopup, handleClosePopup }) {
       children: <RemoveCard onDelete={() => handleDeleteClick(project._id)} />,
     })
   }
+
+  const getAssignedUsers = (assignedTo) => {
+  return assignedTo?.length
+    ? assignedTo.map((user) => user.name).join(", ")
+    : "Sin asignar";
+};
+
 
   return (
     <div>
@@ -132,11 +139,7 @@ export default function ProjectsAdmin({ handleOpenPopup, handleClosePopup }) {
                       </td>
 
                       <td className="px-3 py-3 text-sm text-gray-600 sm:px-6 sm:py-4">
-                        {project.assignedTo?.length
-                          ? project.assignedTo
-                              .map((user) => user.name)
-                              .join(", ")
-                          : "Sin asignar"}
+                        {getAssignedUsers(project.assignedTo)}
                       </td>
 
                       <td className="px-3 py-3 sm:px-6 sm:py-4">
