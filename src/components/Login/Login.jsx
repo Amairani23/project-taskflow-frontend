@@ -43,6 +43,7 @@ export default function Login({ handleLogin }) {
             placeholder="Correo electrónico"
             value={data.email}
             onChange={handleChange}
+            required
           />
 
           <input
@@ -52,6 +53,7 @@ export default function Login({ handleLogin }) {
             placeholder="Contraseña"
             value={data.password}
             onChange={handleChange}
+            required
           />
 
           <button

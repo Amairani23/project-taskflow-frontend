@@ -19,6 +19,7 @@ import api from "../../utils/api"
 import InfoLoading from "../Popup/InfoTooltip/InfoLoading"
 
 function App() {
+  //popup
   const { popup, handleOpenPopup, handleClosePopup } = usePopup()
 
   //carga
@@ -223,19 +224,18 @@ function App() {
 
   // Eliminar usuario
   async function handleUserDelete(userId) {
-   try {
-   await api.deleteUser(userId);
+    try {
+      await api.deleteUser(userId)
 
-  setUsuarios((state) =>
-    state.filter((currentCard) => currentCard._id !== userId)
-  );
+      setUsuarios((state) =>
+        state.filter((currentCard) => currentCard._id !== userId),
+      )
 
-  handleClosePopup();
-  } catch (error) {
+      handleClosePopup()
+    } catch (error) {
       console.error(error)
     }
-}
-
+  }
 
   return (
     <>
@@ -263,7 +263,7 @@ function App() {
         }}
       >
         {isLoading ? (
-          <InfoLoading  />
+          <InfoLoading />
         ) : (
           <>
             <Header
