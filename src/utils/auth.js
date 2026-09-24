@@ -1,4 +1,4 @@
-export const BASE_URL = "http://localhost:3000"
+export const BASE_URL = "https://api.inariama.taskflow.mooo.com"
 
 export const register = (data) => {
   return fetch(`${BASE_URL}/signup`, {
