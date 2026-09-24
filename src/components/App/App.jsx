@@ -263,7 +263,7 @@ function App() {
         }}
       >
         {isLoading ? (
-          <InfoLoading />
+          <InfoLoading  />
         ) : (
           <>
             <Header
