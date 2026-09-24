@@ -7,8 +7,10 @@ La aplicación cuenta con diferentes niveles de acceso según el rol del usuario
 Sitio web: https://inariama.taskflow.mooo.com/
 
 Nota:
-Correo de ejemplo, como colaborador: test@example.com
+Correo de ejemplo, como admin: test@example.com
 Contraseña: test
+Correo de ejemplo, como colaborador: test@prueba.com
+Contraseña: prueba
 
 ## Características principales
 
