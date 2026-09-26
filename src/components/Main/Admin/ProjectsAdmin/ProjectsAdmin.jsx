@@ -1,9 +1,11 @@
 import { useState, useContext } from "react"
+import { useSearch } from "../../../../hooks/useSearch"
 
 import NewProject from "../../../Popup/form/NewProject/NewProject"
 import RemoveCard from "../../../Popup/RemoveCard/RemoveCard"
 import EditProject from "../../../Popup/form/EditProject/EditProject"
 import CurrentUserContext from "../../../../contexts/CurrentUserContext"
+import SearchBar from "../SearchBar/SearchBar"
 
 import agregar from "../../../../images/btn-add-project.svg"
 import editar from "../../../../images/editar.svg"
@@ -12,6 +14,8 @@ import borrar from "../../../../images/borrar.svg"
 export default function ProjectsAdmin({ handleOpenPopup, handleClosePopup }) {
   const { projects, handleDeleteProject, user, usuarios } =
     useContext(CurrentUserContext)
+
+  const { results, searchTerm, handleSearch } = useSearch()
   const [projectToDelete, setProjectToDelete] = useState(null)
 
   const addProjectPopup = {
@@ -48,11 +52,10 @@ export default function ProjectsAdmin({ handleOpenPopup, handleClosePopup }) {
   }
 
   const getAssignedUsers = (assignedTo) => {
-  return assignedTo?.length
-    ? assignedTo.map((user) => user.name).join(", ")
-    : "Sin asignar";
-};
-
+    return assignedTo?.length
+      ? assignedTo.map((user) => user.name).join(", ")
+      : "Sin asignar"
+  }
 
   return (
     <div>
@@ -69,6 +72,8 @@ export default function ProjectsAdmin({ handleOpenPopup, handleClosePopup }) {
             <span>Nuevo proyecto</span>
           </button>
         </div>
+
+        <SearchBar placeholder="Buscar" onQuery={handleSearch} />
 
         <div className="max-w-full overflow-x-auto rounded-xl bg-white shadow-lg">
           <table className="w-full min-w-[600px] text-left">
@@ -103,74 +108,158 @@ export default function ProjectsAdmin({ handleOpenPopup, handleClosePopup }) {
                 </th>
               </tr>
             </thead>
-
-            <tbody className="divide-y divide-gray-200">
-              {[...projects]
-                .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-                .map((project, index) => {
-                  const owner = usuarios.find(
-                    (usuario) => usuario._id === project.ownerId,
-                  )
-                  return (
-                    <tr
-                      key={project._id}
-                      className="transition hover:bg-gray-50"
+            {searchTerm ? (
+              <tbody className="divide-y divide-gray-200">
+                {results.length === 0 ? (
+                  <tr>
+                    <td
+                      colSpan={7}
+                      className="px-6 py-8 text-center text-sm text-gray-500"
                     >
-                      <td className="px-3 py-3 text-sm font-medium text-gray-800 sm:px-6 sm:py-4">
-                        {index + 1}
-                      </td>
+                      {searchTerm
+                        ? "No se encontraron proyectos para tu búsqueda."
+                        : "No hay proyectos registrados."}
+                    </td>
+                  </tr>
+                ) : (
+                  [...results]
+                    .sort(
+                      (a, b) => new Date(b.createdAt) - new Date(a.createdAt),
+                    )
+                    .map((project, index) => {
+                      const owner = usuarios.find(
+                        (usuario) => usuario._id === project.ownerId,
+                      )
+                      return (
+                        <tr
+                          key={project._id}
+                          className="transition hover:bg-gray-50"
+                        >
+                          <td className="px-3 py-3 text-sm font-medium text-gray-800 sm:px-6 sm:py-4">
+                            {index + 1}
+                          </td>
 
-                      <td className="px-3 py-3 text-sm text-gray-600 sm:px-6 sm:py-4">
-                        {new Date(project.createdAt).toLocaleDateString(
-                          "es-MX",
-                        )}
-                      </td>
+                          <td className="px-3 py-3 text-sm text-gray-600 sm:px-6 sm:py-4">
+                            {new Date(project.createdAt).toLocaleDateString(
+                              "es-MX",
+                            )}
+                          </td>
 
-                      <td className="px-3 py-3 text-sm text-gray-600 sm:px-6 sm:py-4">
-                        {owner?.name || "Sin asignar"}
-                      </td>
+                          <td className="px-3 py-3 text-sm text-gray-600 sm:px-6 sm:py-4">
+                            {owner?.name || "Sin asignar"}
+                          </td>
 
-                      <td className="px-3 py-3 text-sm font-medium text-gray-800 sm:px-6 sm:py-4">
-                        {project.titleProject}
-                      </td>
+                          <td className="px-3 py-3 text-sm font-medium text-gray-800 sm:px-6 sm:py-4">
+                            {project.titleProject}
+                          </td>
 
-                      <td className="px-3 py-3 text-sm text-gray-600 sm:px-6 sm:py-4">
-                        {project.descriptionProject}
-                      </td>
+                          <td className="px-3 py-3 text-sm text-gray-600 sm:px-6 sm:py-4">
+                            {project.descriptionProject}
+                          </td>
 
-                      <td className="px-3 py-3 text-sm text-gray-600 sm:px-6 sm:py-4">
-                        {getAssignedUsers(project.assignedTo)}
-                      </td>
+                          <td className="px-3 py-3 text-sm text-gray-600 sm:px-6 sm:py-4">
+                            {getAssignedUsers(project.assignedTo)}
+                          </td>
 
-                      <td className="px-3 py-3 sm:px-6 sm:py-4">
-                        <div className="flex justify-end gap-3">
-                          <button
-                            type="button"
-                            onClick={() => handleEditProject(project)}
-                          >
-                            <img
-                              src={editar}
-                              alt="Editar"
-                              className="w-7 sm:w-8"
-                            />
-                          </button>
+                          <td className="px-3 py-3 sm:px-6 sm:py-4">
+                            <div className="flex justify-end gap-3">
+                              <button
+                                type="button"
+                                onClick={() => handleEditProject(project)}
+                              >
+                                <img
+                                  src={editar}
+                                  alt="Editar"
+                                  className="w-7 sm:w-8"
+                                />
+                              </button>
 
-                          <button
-                            type="button"
-                            onClick={() => handleRemoveProject(project)}
-                          >
-                            <img
-                              src={borrar}
-                              alt="Eliminar"
-                              className="w-7 sm:w-8"
-                            />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  )
-                })}
-            </tbody>
+                              <button
+                                type="button"
+                                onClick={() => handleRemoveProject(project)}
+                              >
+                                <img
+                                  src={borrar}
+                                  alt="Eliminar"
+                                  className="w-7 sm:w-8"
+                                />
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      )
+                    })
+                )}
+              </tbody>
+            ) : (
+              <tbody className="divide-y divide-gray-200">
+                {[...projects]
+                  .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+                  .map((project, index) => {
+                    const owner = usuarios.find(
+                      (usuario) => usuario._id === project.ownerId,
+                    )
+                    return (
+                      <tr
+                        key={project._id}
+                        className="transition hover:bg-gray-50"
+                      >
+                        <td className="px-3 py-3 text-sm font-medium text-gray-800 sm:px-6 sm:py-4">
+                          {index + 1}
+                        </td>
+
+                        <td className="px-3 py-3 text-sm text-gray-600 sm:px-6 sm:py-4">
+                          {new Date(project.createdAt).toLocaleDateString(
+                            "es-MX",
+                          )}
+                        </td>
+
+                        <td className="px-3 py-3 text-sm text-gray-600 sm:px-6 sm:py-4">
+                          {owner?.name || "Sin asignar"}
+                        </td>
+
+                        <td className="px-3 py-3 text-sm font-medium text-gray-800 sm:px-6 sm:py-4">
+                          {project.titleProject}
+                        </td>
+
+                        <td className="px-3 py-3 text-sm text-gray-600 sm:px-6 sm:py-4">
+                          {project.descriptionProject}
+                        </td>
+
+                        <td className="px-3 py-3 text-sm text-gray-600 sm:px-6 sm:py-4">
+                          {getAssignedUsers(project.assignedTo)}
+                        </td>
+
+                        <td className="px-3 py-3 sm:px-6 sm:py-4">
+                          <div className="flex justify-end gap-3">
+                            <button
+                              type="button"
+                              onClick={() => handleEditProject(project)}
+                            >
+                              <img
+                                src={editar}
+                                alt="Editar"
+                                className="w-7 sm:w-8"
+                              />
+                            </button>
+
+                            <button
+                              type="button"
+                              onClick={() => handleRemoveProject(project)}
+                            >
+                              <img
+                                src={borrar}
+                                alt="Eliminar"
+                                className="w-7 sm:w-8"
+                              />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    )
+                  })}
+              </tbody>
+            )}
           </table>
         </div>
       </main>

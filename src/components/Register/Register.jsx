@@ -1,22 +1,21 @@
-import { Link } from "react-router-dom";
-import { useState } from "react";
+import { Link } from "react-router-dom"
+import { useState } from "react"
 
-import logo from "../../images/logo-blanco.svg";
+import logo from "../../images/logo-blanco.svg"
 
 export default function Register({ handleRegistration }) {
-
   const [data, setData] = useState({
     email: "",
     password: "",
-  });
+  })
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value } = e.target
     setData((prevData) => ({
       ...prevData,
       [name]: value,
-    }));
-  };
+    }))
+  }
 
   const handleSubmit = (e) => {
     e.preventDefault();
