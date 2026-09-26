@@ -4,10 +4,19 @@ import { useState } from "react"
 import logo from "../../images/logo-blanco.svg"
 
 export default function Login({ handleLogin }) {
+
   const [data, setData] = useState({
     email: "",
     password: "",
   })
+
+  const isFormValid =
+  data.email.trim().length >= 3 &&
+  data.email.trim().length <= 40 &&
+  /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email) &&
+  data.password.length >= 4
+
+
 
   const handleChange = (e) => {
     const { name, value } = e.target
@@ -35,7 +44,7 @@ export default function Login({ handleLogin }) {
           src={logo}
         />
         <h1 className="text-2xl font-bold text-center mb-6">Iniciar sesión</h1>
-        <form action="" className="login__form" onSubmit={handleSubmit}>
+        <form action="" onSubmit={handleSubmit}>
           <input
             className="w-full border p-3 rounded-lg mb-4"
             type="email"
@@ -56,14 +65,16 @@ export default function Login({ handleLogin }) {
 
           <button
             type="submit"
-            className="w-full bg-[#02216B] text-white p-3 rounded-lg"
+            className="w-full rounded-lg bg-[#02216B] p-3 text-white disabled:cursor-not-allowed disabled:opacity-50"
+            disabled={!isFormValid}
           >
             Inicia sesión
           </button>
+
         </form>
         <div className="mt-6 font-bold text-center">
           <p>¿Ya eres miembro?</p>
-          <Link to="/signup" className="register__login-link">
+          <Link to="/signup" >
             Registrate aquí
           </Link>
         </div>

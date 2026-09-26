@@ -31,7 +31,7 @@ export default function EditTakUser({
   const handleTitleChange = (event) => {
     const value = event.target.value
 
-    if (value.length < 3) {
+    if (event.target.value.length <= 2 || event.target.value.length > 40) {
       setTitleError("Error: debe tener más de 2 caracteres y menos de 40")
     } else {
       setTitleError("")
@@ -139,7 +139,7 @@ export default function EditTakUser({
       noValidate
       onSubmit={handleSubmit}
     >
-      <label className="popup__label">
+      <label>
         <input
           className="w-full border-b border-gray-300 bg-transparent px-1 py-3 text-lg text-white outline-none transition placeholder:text-gray-400 focus:border-green-600"
           maxLength="200"
@@ -154,7 +154,7 @@ export default function EditTakUser({
         <span className="min-h-5 text-sm text-red-500">{titleError}</span>
       </label>
 
-      <label className="popup__label">
+      <label>
         <select
           value={status}
           onChange={handleStatusChange}
@@ -175,7 +175,7 @@ export default function EditTakUser({
         <span className="min-h-5 text-sm text-red-500">{statusError}</span>
       </label>
 
-      <label className="popup__label">
+      <label>
         <select
           value={priority}
           onChange={handlePriorityChange}

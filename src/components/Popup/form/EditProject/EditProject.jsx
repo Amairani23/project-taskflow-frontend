@@ -15,7 +15,7 @@ export default function EditProjects({ project, handleClosePopup }) {
   const [descriptionError, setDescriptionError] = useState("")
 
   const handleTitleChange = (event) => {
-    if (event.target.value.length < 3) {
+    if (event.target.value.length <= 2 || event.target.value.length > 40) {
       setTitleError("Error: debe tener más de 2 caracteres y menos de 40")
     } else {
       setTitleError("")
@@ -25,7 +25,7 @@ export default function EditProjects({ project, handleClosePopup }) {
   }
 
   const handleDescriptionChange = (event) => {
-    if (event.target.value.length < 3) {
+    if (event.target.value.length <= 2 || event.target.value.length > 40) {
       setDescriptionError("Error: debe tener más de 2 caracteres y menos de 40")
     } else {
       setDescriptionError("")
@@ -33,6 +33,13 @@ export default function EditProjects({ project, handleClosePopup }) {
 
     setDescription(event.target.value)
   }
+
+  const isFormValid =
+  title.length >= 3 &&
+  title.length <= 40 &&
+  description.length >= 3 &&
+  description.length <= 40
+
 
   const handleSubmit = (event) => {
     event.preventDefault()
@@ -54,7 +61,7 @@ export default function EditProjects({ project, handleClosePopup }) {
       )
     }
 
-    const handleAssignUser = (event) => {
+  const handleAssignUser = (event) => {
   const selectedUser = usuarios.find(
     (user) => user._id === event.target.value
   );
@@ -144,7 +151,7 @@ export default function EditProjects({ project, handleClosePopup }) {
 
       <select
         value=""
-        onChange={handlerAssignedClick}
+        onChange={handleAssignUser}
         className="w-full cursor-pointer rounded-lg border border-gray-600 bg-gray-800 px-4 py-3 text-sm text-white outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/30"
       >
         <option value="" disabled className="bg-gray-800 text-gray-400">
@@ -163,7 +170,7 @@ export default function EditProjects({ project, handleClosePopup }) {
       </select>
 
       <div className="flex justify-end gap-5 mt-6">
-        <button type="submit">
+        <button type="submit" disabled={!isFormValid}>
           <img src={guardar} type="submit" alt="" className="w-10 " />
         </button>
       </div>

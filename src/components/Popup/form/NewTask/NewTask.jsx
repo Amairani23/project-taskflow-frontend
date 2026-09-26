@@ -24,10 +24,8 @@ export default function NewTask({ handleClosePopup }) {
 
     setTitle(value)
 
-    if (value.length < 3) {
-      setTitleError("El título debe tener más de 2 caracteres")
-    } else if (value.length > 40) {
-      setTitleError("El título no puede tener más de 40 caracteres")
+    if (event.target.value.length <= 2 || event.target.value.length > 40) {
+      setTitleError("Error: debe tener más de 2 caracteres y menos de 40")
     } else {
       setTitleError("")
     }
@@ -139,7 +137,7 @@ export default function NewTask({ handleClosePopup }) {
       onSubmit={handleSubmit}
       noValidate
     >
-      <label className="popup__label">
+      <label>
         <input
           className="w-full border-b border-gray-300 bg-transparent px-1 py-3 text-lg text-white outline-none transition placeholder:text-gray-400 focus:border-green-600"
           maxLength="40"
@@ -154,7 +152,7 @@ export default function NewTask({ handleClosePopup }) {
         <span className="min-h-5 text-sm text-red-500">{titleError}</span>
       </label>
 
-      <label className="popup__label">
+      <label>
         <select
           value={projectId}
           onChange={handleProjectChange}
@@ -175,7 +173,7 @@ export default function NewTask({ handleClosePopup }) {
         <span className="min-h-5 text-sm text-red-500">{projectError}</span>
       </label>
 
-      <label className="popup__label">
+      <label>
         <select
           value={status}
           onChange={(event) => setStatus(event.target.value)}
@@ -190,7 +188,7 @@ export default function NewTask({ handleClosePopup }) {
         </select>
       </label>
 
-      <label className="popup__label">
+      <label>
         <select
           value={priority}
           onChange={handlePriorityChange}

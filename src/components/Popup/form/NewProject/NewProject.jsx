@@ -16,7 +16,7 @@ export default function NewProject({ handleClosePopup, userRole }) {
   const [descriptionRefError, setDescriptionRefError] = useState("")
 
   const handleTitleChange = (event) => {
-    if (event.target.value.length < 3) {
+    if (event.target.value.length <= 2 || event.target.value.length > 40) {
       setTitleRefError("Error: debe tener más de 2 caracteres y menos de 40")
     } else {
       setTitleRefError("")
@@ -26,7 +26,7 @@ export default function NewProject({ handleClosePopup, userRole }) {
   }
 
   const handleDescriptionChange = (event) => {
-    if (event.target.value.length < 3) {
+   if (event.target.value.length <= 2 || event.target.value.length > 40) {
       setDescriptionRefError(
         "Error: debe tener más de 2 caracteres y menos de 40",
       )
@@ -78,7 +78,7 @@ export default function NewProject({ handleClosePopup, userRole }) {
       id="new-card-form"
       onSubmit={handleSubmit}
     >
-      <label className="popup__label">
+      <label >
         <input
           id="title"
           className="w-full border-b border-gray-300 bg-transparent px-1 py-3 text-lg text-white outline-none transition placeholder:text-gray-400 focus:border-green-600"
@@ -91,7 +91,7 @@ export default function NewProject({ handleClosePopup, userRole }) {
         />
         <span className="min-h-5 text-sm text-red-500">{titleError}</span>
       </label>
-      <label className="popup__label">
+      <label >
         <input
           id="description"
           className="w-full border-b border-gray-300 bg-transparent px-1 py-3 text-lg text-white outline-none transition placeholder:text-gray-400 focus:border-green-600"
