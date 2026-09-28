@@ -29,6 +29,8 @@ Entre sus principales funcionalidades se encuentran:
 - Visualización de los usuarios responsables o asignados a los proyectos.
 - Gestión de la información dependiendo de los permisos establecidos por el backend.
 
+[![admin](https://github.com/Amairani23/project-taskflow-frontend/blob/1b540ed9a1a02c853b89bc5376573e0f4f51dd76/src/images/taskflow-admin.jpg "admin")](https://github.com/Amairani23/project-taskflow-frontend/blob/1b540ed9a1a02c853b89bc5376573e0f4f51dd76/src/images/taskflow-admin.jpg "admin")
+
 ### Usuario
 
 Los usuarios tienen acceso a la información relacionada con los proyectos en los que participan.
@@ -40,6 +42,8 @@ Sus principales funcionalidades son:
 - Visualizar las tareas correspondientes a cada proyecto.
 - Consultar las tareas que tienen pendientes.
 - Dar seguimiento a las actividades asignadas.
+
+[![colaborador](https://github.com/Amairani23/project-taskflow-frontend/blob/1b540ed9a1a02c853b89bc5376573e0f4f51dd76/src/images/taskflow-user.jpg "colaborador")](https://github.com/Amairani23/project-taskflow-frontend/blob/1b540ed9a1a02c853b89bc5376573e0f4f51dd76/src/images/taskflow-user.jpg "colaborador")
 
 ## Tecnologías utilizadas
 
